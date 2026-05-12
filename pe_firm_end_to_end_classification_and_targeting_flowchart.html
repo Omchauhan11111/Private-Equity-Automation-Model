@@ -1,0 +1,375 @@
+<h2 class="sr-only">End-to-end flowchart for PE firm classification and prospect targeting across 6 stages</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.flow{padding:1.5rem 0;font-family:var(--font-sans);max-width:680px}
+.stage{margin-bottom:2rem;position:relative}
+.stage-header{display:flex;align-items:center;gap:10px;margin-bottom:1rem}
+.stage-num{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:14px;flex-shrink:0}
+.stage-title{font-size:16px;font-weight:500;color:var(--color-text-primary)}
+.stage-sub{font-size:12px;color:var(--color-text-secondary);margin-top:2px}
+.connector{width:2px;height:24px;margin:0 auto;background:var(--color-border-secondary)}
+.gate-row{display:flex;gap:8px;margin-bottom:8px;align-items:stretch}
+.gate{flex:1;border-radius:var(--border-radius-md);padding:10px 12px;position:relative}
+.gate-label{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px}
+.gate-q{font-size:13px;line-height:1.4}
+.gate-detail{font-size:11px;margin-top:4px;line-height:1.3}
+.pass{border-left:3px solid #1D9E75}
+.fail{border-left:3px solid #D85A30}
+.arrow-down{text-align:center;font-size:18px;color:var(--color-text-secondary);margin:4px 0}
+.check-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.check-card{border-radius:var(--border-radius-md);padding:8px 10px;border:0.5px solid var(--color-border-tertiary)}
+.check-w{font-size:11px;font-weight:500;float:right}
+.check-name{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.check-desc{font-size:11px;color:var(--color-text-secondary);margin-top:2px;line-height:1.3}
+.check-sig{font-size:10px;margin-top:3px;line-height:1.2;padding:3px 6px;border-radius:4px;display:inline-block}
+.class-row{display:flex;gap:6px;flex-wrap:wrap}
+.class-box{flex:1;min-width:120px;border-radius:var(--border-radius-md);padding:10px;text-align:center;cursor:default}
+.class-type{font-size:13px;font-weight:500}
+.class-ex{font-size:10px;margin-top:3px;line-height:1.2}
+.path-block{border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);padding:12px;margin-bottom:8px}
+.path-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.path-badge{font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px}
+.path-title{font-size:13px;font-weight:500;color:var(--color-text-primary)}
+.path-steps{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.step{font-size:11px;padding:4px 8px;border-radius:4px;background:var(--color-background-secondary);color:var(--color-text-secondary);white-space:nowrap}
+.step-arrow{font-size:12px;color:var(--color-text-tertiary)}
+.path-triggers{font-size:10px;color:var(--color-text-secondary);margin-top:6px;font-style:italic}
+.title-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.title-card{border-radius:var(--border-radius-md);padding:8px 10px;border:0.5px solid var(--color-border-tertiary)}
+.title-level{font-size:11px;font-weight:500;margin-bottom:3px}
+.title-names{font-size:11px;color:var(--color-text-secondary);line-height:1.3}
+.title-why{font-size:10px;margin-top:4px;padding:3px 6px;border-radius:4px;display:inline-block;line-height:1.2}
+.prio-row{display:flex;gap:6px;margin-bottom:6px;align-items:stretch}
+.prio{flex:1;border-radius:var(--border-radius-md);padding:8px 10px}
+.prio-num{font-size:12px;font-weight:500;margin-bottom:3px}
+.prio-desc{font-size:11px;line-height:1.3}
+.prio-action{font-size:10px;margin-top:4px;font-style:italic}
+.decision{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 12px;margin:8px 0;text-align:center;font-size:12px;color:var(--color-text-secondary);border:0.5px solid var(--color-border-tertiary)}
+.full-span{grid-column:1/-1}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1rem;padding:8px 12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md)}
+.legend-item{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--color-text-secondary)}
+.legend-dot{width:10px;height:10px;border-radius:2px}
+</style>
+
+<div class="flow">
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div> Pass / proceed</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#D85A30"></div> Fail / discard</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#534AB7"></div> Classification</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#185FA5"></div> Action / output</div>
+</div>
+
+<!-- STAGE 1 -->
+<div class="stage">
+  <div class="stage-header">
+    <div class="stage-num" style="background:#E1F5EE;color:#0F6E56">1</div>
+    <div><div class="stage-title">Firm qualification</div><div class="stage-sub">4 gates — every PE firm must pass ALL 4 to enter classification</div></div>
+  </div>
+
+  <div class="gate-row">
+    <div class="gate pass" style="background:#E1F5EE">
+      <div class="gate-label" style="color:#0F6E56">Gate 1</div>
+      <div class="gate-q" style="color:#085041">APAC investment mandate?</div>
+      <div class="gate-detail" style="color:#0F6E56">Does the firm have an office in SG, HK, Mumbai, Jakarta, Sydney, or Tokyo? OR do their portfolio companies have APAC operations/supply chains?</div>
+    </div>
+    <div class="gate pass" style="background:#E1F5EE">
+      <div class="gate-label" style="color:#0F6E56">Gate 2</div>
+      <div class="gate-q" style="color:#085041">Physical operations sectors?</div>
+      <div class="gate-detail" style="color:#0F6E56">Is 30%+ of the portfolio in manufacturing, industrials, infrastructure, logistics, energy, consumer goods, healthcare with physical ops, or real assets?</div>
+    </div>
+  </div>
+  <div class="gate-row">
+    <div class="gate pass" style="background:#E1F5EE">
+      <div class="gate-label" style="color:#0F6E56">Gate 3</div>
+      <div class="gate-q" style="color:#085041">Right size?</div>
+      <div class="gate-detail" style="color:#0F6E56">AUM $500M–$15B. Team size 20–500. Exception: sovereign wealth funds (GIC, Temasek, INA) bypass this gate entirely.</div>
+    </div>
+    <div class="gate pass" style="background:#E1F5EE">
+      <div class="gate-label" style="color:#0F6E56">Gate 4</div>
+      <div class="gate-q" style="color:#085041">Active APAC deal flow?</div>
+      <div class="gate-detail" style="color:#0F6E56">Has the firm closed at least 1 deal involving APAC in the last 24 months? Check portfolio page for recent additions or Google "[firm] Asia acquisition 2024-2026".</div>
+    </div>
+  </div>
+
+  <div class="decision">
+    All 4 gates passed? → <strong style="color:#1D9E75">YES: proceed to stage 2</strong> &nbsp;|&nbsp; <strong style="color:#D85A30">Any NO: discard firm</strong>
+  </div>
+</div>
+
+<div class="connector"></div>
+
+<!-- STAGE 2 -->
+<div class="stage">
+  <div class="stage-header">
+    <div class="stage-num" style="background:#EEEDFE;color:#534AB7">2</div>
+    <div><div class="stage-title">Firm classification</div><div class="stage-sub">7 weighted checks — run in order, each produces a signal, combination determines type</div></div>
+  </div>
+
+  <div class="check-grid">
+    <div class="check-card">
+      <div class="check-w" style="color:#534AB7">25%</div>
+      <div class="check-name">1. Website team page scan</div>
+      <div class="check-desc">Does a branded operating team page exist with listed members? Navigate to "Our People" → look for separate ops team filter.</div>
+      <div class="check-sig" style="background:#E1F5EE;color:#0F6E56">Centralized: dedicated page with names</div>
+      <div class="check-sig" style="background:#FAECE7;color:#993C1D;margin-left:4px">Decentralized: no separate page</div>
+    </div>
+    <div class="check-card">
+      <div class="check-w" style="color:#534AB7">20%</div>
+      <div class="check-name">2. Language analysis</div>
+      <div class="check-desc">Does the website say "team of X professionals" or "network of X advisors"? Count centralized vs decentralized phrases.</div>
+      <div class="check-sig" style="background:#E1F5EE;color:#0F6E56">"team" + "full-time" = centralized</div>
+      <div class="check-sig" style="background:#FAECE7;color:#993C1D;margin-left:4px">"network" + "advisors" = decentralized</div>
+    </div>
+    <div class="check-card">
+      <div class="check-w" style="color:#534AB7">20%</div>
+      <div class="check-name">3. LinkedIn headcount test</div>
+      <div class="check-desc">Search LinkedIn for employees with "operating" / "value creation" titles. Count results and check title patterns.</div>
+      <div class="check-sig" style="background:#E1F5EE;color:#0F6E56">50+ results with career ladder = centralized</div>
+      <div class="check-sig" style="background:#FAECE7;color:#993C1D;margin-left:4px">Under 5 results = decentralized</div>
+    </div>
+    <div class="check-card">
+      <div class="check-w" style="color:#534AB7">15%</div>
+      <div class="check-name">4. Job postings check</div>
+      <div class="check-desc">Is the firm hiring full-time ops roles? (Associate, VP, Director in ops/value creation)</div>
+      <div class="check-sig" style="background:#E1F5EE;color:#0F6E56">Ops job postings = centralized</div>
+      <div class="check-sig" style="background:#FAECE7;color:#993C1D;margin-left:4px">Only deal team roles = decentralized</div>
+    </div>
+    <div class="check-card">
+      <div class="check-w" style="color:#534AB7">10%</div>
+      <div class="check-name">5. Annual report scan</div>
+      <div class="check-desc">For public firms only. Does the report name a specific ops team with headcount? Most authoritative source (filed with regulators).</div>
+    </div>
+    <div class="check-card">
+      <div class="check-w" style="color:#534AB7">5%</div>
+      <div class="check-name">6. Board composition sample</div>
+      <div class="check-desc">Pick 2-3 portfolio companies. Are ops team members on the board as employees (centralized) or as independent affiliates (decentralized)?</div>
+    </div>
+    <div class="check-card full-span">
+      <div class="check-w" style="color:#534AB7">5%</div>
+      <div class="check-name">7. Umbrex / third-party cross-reference</div>
+      <div class="check-desc">Check umbrex.com/resources/private-equity-operating-partner-groups/ for the firm's profile. Confirms or corrects the classification from checks 1-6.</div>
+    </div>
+  </div>
+
+  <div class="decision">
+    Combine all 7 signals with weights → confidence score (0-100) → if below 60, flag for manual review
+  </div>
+</div>
+
+<div class="connector"></div>
+
+<!-- STAGE 3 -->
+<div class="stage">
+  <div class="stage-header">
+    <div class="stage-num" style="background:#EEEDFE;color:#534AB7">3</div>
+    <div><div class="stage-title">Classification output</div><div class="stage-sub">Each firm gets exactly one label — this determines the targeting path</div></div>
+  </div>
+
+  <div class="class-row">
+    <div class="class-box" style="background:#E1F5EE">
+      <div class="class-type" style="color:#085041">Centralized</div>
+      <div class="class-ex" style="color:#0F6E56">KKR Capstone, Bain Capital Portfolio Group</div>
+    </div>
+    <div class="class-box" style="background:#FAEEDA">
+      <div class="class-type" style="color:#633806">Hybrid</div>
+      <div class="class-ex" style="color:#854F0B">Carlyle GPS, TPG, Warburg Pincus, General Atlantic</div>
+    </div>
+    <div class="class-box" style="background:#EEEDFE">
+      <div class="class-type" style="color:#3C3489">Network-based</div>
+      <div class="class-ex" style="color:#534AB7">EQT advisors, Partners Group, Advent</div>
+    </div>
+    <div class="class-box" style="background:#FAECE7">
+      <div class="class-type" style="color:#712B13">Decentralized</div>
+      <div class="class-ex" style="color:#993C1D">Apollo Global, Affinity, Navis, Granite Asia</div>
+    </div>
+    <div class="class-box" style="background:#D6EAF8">
+      <div class="class-type" style="color:#0C447C">Asset mgmt</div>
+      <div class="class-ex" style="color:#185FA5">→ separate Real Assets agent</div>
+    </div>
+  </div>
+</div>
+
+<div class="connector"></div>
+
+<!-- STAGE 4 -->
+<div class="stage">
+  <div class="stage-header">
+    <div class="stage-num" style="background:#E6F1FB;color:#185FA5">4</div>
+    <div><div class="stage-title">Targeting path</div><div class="stage-sub">Classification determines WHERE you find prospects — 4 paths, some firms use multiple</div></div>
+  </div>
+
+  <div class="path-block">
+    <div class="path-header">
+      <div class="path-badge" style="background:#E1F5EE;color:#085041">Path A</div>
+      <div class="path-title">Scrape ops team from website</div>
+    </div>
+    <div class="path-steps">
+      <div class="step">Find team page on website</div><div class="step-arrow">→</div>
+      <div class="step">Extract names + titles</div><div class="step-arrow">→</div>
+      <div class="step">Match to LinkedIn</div><div class="step-arrow">→</div>
+      <div class="step">Pull emails from Apollo</div><div class="step-arrow">→</div>
+      <div class="step" style="background:#E6F1FB;color:#0C447C">Prospect list</div>
+    </div>
+    <div class="path-triggers">Triggered by: CENTRALIZED firms. Also the internal team component of HYBRID firms.</div>
+  </div>
+
+  <div class="path-block">
+    <div class="path-header">
+      <div class="path-badge" style="background:#EEEDFE;color:#3C3489">Path B</div>
+      <div class="path-title">Portfolio company operators</div>
+    </div>
+    <div class="path-steps">
+      <div class="step">Scrape portfolio page</div><div class="step-arrow">→</div>
+      <div class="step">Filter by industry + HQ geo</div><div class="step-arrow">→</div>
+      <div class="step">Check APAC expansion signals</div><div class="step-arrow">→</div>
+      <div class="step">Pull C-suite from Apollo</div><div class="step-arrow">→</div>
+      <div class="step" style="background:#E6F1FB;color:#0C447C">Prospect list</div>
+    </div>
+    <div class="path-triggers">Triggered by: DECENTRALIZED, NETWORK-BASED, and HYBRID firms. This is the primary path for most PE firms.</div>
+  </div>
+
+  <div class="path-block">
+    <div class="path-header">
+      <div class="path-badge" style="background:#FAEEDA;color:#633806">Path C</div>
+      <div class="path-title">LinkedIn search for external advisors</div>
+    </div>
+    <div class="path-steps">
+      <div class="step">Sales Nav: company = PE firm</div><div class="step-arrow">→</div>
+      <div class="step">Title: "Operating Executive" / "Industrial Advisor"</div><div class="step-arrow">→</div>
+      <div class="step">Verify on LinkedIn</div><div class="step-arrow">→</div>
+      <div class="step">Apollo enrich</div><div class="step-arrow">→</div>
+      <div class="step" style="background:#E6F1FB;color:#0C447C">Prospect list</div>
+    </div>
+    <div class="path-triggers">Triggered by: NETWORK-BASED firms (EQT, Partners Group). Also HYBRID firms for their external advisor component.</div>
+  </div>
+
+  <div class="path-block">
+    <div class="path-header">
+      <div class="path-badge" style="background:#FAECE7;color:#712B13">Path D</div>
+      <div class="path-title">PE firm deal partners + associates</div>
+    </div>
+    <div class="path-steps">
+      <div class="step">Sales Nav: company = PE firm</div><div class="step-arrow">→</div>
+      <div class="step">Title: Associate, VP, Director, MD, Partner</div><div class="step-arrow">→</div>
+      <div class="step">Keywords: "manufacturing" / "industrials" / "APAC"</div><div class="step-arrow">→</div>
+      <div class="step">Apollo enrich</div><div class="step-arrow">→</div>
+      <div class="step" style="background:#E6F1FB;color:#0C447C">Prospect list</div>
+    </div>
+    <div class="path-triggers">Triggered by: ALL firm types. Associates own vendor workflows. VPs have budget authority. Partners are long-term relationship targets.</div>
+  </div>
+
+  <div class="decision">
+    Which paths per classification? <strong>Centralized</strong> = A + D &nbsp;|&nbsp; <strong>Hybrid</strong> = A + B + D &nbsp;|&nbsp; <strong>Network</strong> = B + C + D &nbsp;|&nbsp; <strong>Decentralized</strong> = B + D
+  </div>
+</div>
+
+<div class="connector"></div>
+
+<!-- STAGE 5 -->
+<div class="stage">
+  <div class="stage-header">
+    <div class="stage-num" style="background:#E6F1FB;color:#185FA5">5</div>
+    <div><div class="stage-title">Title targeting</div><div class="stage-sub">WHO exactly to find at each level — every level has a different role in the buying decision</div></div>
+  </div>
+
+  <div class="title-grid">
+    <div class="title-card">
+      <div class="title-level" style="color:#185FA5">Level 1: Associates + analysts</div>
+      <div class="title-names">Investment Associate, Analyst, Senior Associate, Investment Analyst</div>
+      <div class="title-why" style="background:#E6F1FB;color:#0C447C">Own the vendor evaluation workflow. They search for advisory firms, request proposals, and recommend to partners. Building relationships here generates traction from the ground up.</div>
+    </div>
+    <div class="title-card">
+      <div class="title-level" style="color:#185FA5">Level 2: VPs + directors</div>
+      <div class="title-names">Vice President, Director, SVP, Investment Director, Investment Manager</div>
+      <div class="title-why" style="background:#E6F1FB;color:#0C447C">Manage the deal process. Have direct budget authority for $20-50K advisory engagements without needing partner sign-off. Remember which advisors delivered well.</div>
+    </div>
+    <div class="title-card">
+      <div class="title-level" style="color:#185FA5">Level 3: Partners + MDs</div>
+      <div class="title-names">Partner, Managing Director, Managing Partner, Principal</div>
+      <div class="title-why" style="background:#E6F1FB;color:#0C447C">Decide which deals to pursue and which advisors to bring in. Highest value but hardest to reach. Let Associate/VP relationships create visibility first.</div>
+    </div>
+    <div class="title-card">
+      <div class="title-level" style="color:#185FA5">Level 4: Operating team (centralized only)</div>
+      <div class="title-names">Operating Partner, VP Value Creation, Director Portfolio Ops, Capstone Associate</div>
+      <div class="title-why" style="background:#E6F1FB;color:#0C447C">Most direct BI buyer at centralized firms. They scope and manage external advisory engagements. One relationship = multiple portfolio company deals.</div>
+    </div>
+    <div class="title-card full-span">
+      <div class="title-level" style="color:#185FA5">Level 5: Corporate development at PE-backed portfolio companies (Path B only)</div>
+      <div class="title-names">Corp Dev Director, VP Corp Dev, VP Strategy, Head of M&A, CEO, COO, VP Operations, VP Supply Chain, VP International</div>
+      <div class="title-why" style="background:#E6F1FB;color:#0C447C">Sit at the portfolio company. Responsible for growth initiatives including APAC expansion. Buy BI services directly with PE-allocated budget. Highest conversion path.</div>
+    </div>
+  </div>
+
+  <div class="decision">
+    Outreach sequence: start with <strong>Level 1-2</strong> (Associates + VPs) at the PE firm to build ground-up traction → Level 5 (portfolio co operators) for direct pipeline → Level 3-4 (Partners + ops team) once visibility is established
+  </div>
+</div>
+
+<div class="connector"></div>
+
+<!-- STAGE 6 -->
+<div class="stage">
+  <div class="stage-header">
+    <div class="stage-num" style="background:#EAF3DE;color:#3B6D11">6</div>
+    <div><div class="stage-title">Prioritization + outreach sequence</div><div class="stage-sub">Signal-based scoring determines who gets contacted first</div></div>
+  </div>
+
+  <div class="prio-row">
+    <div class="prio" style="background:#E1F5EE">
+      <div class="prio-num" style="color:#085041">Priority 1 — contact within 48h</div>
+      <div class="prio-desc" style="color:#0F6E56">Changed jobs in past 30 days + matches ICP title. OR firm just announced an APAC deal. OR portfolio company just posted APAC roles.</div>
+      <div class="prio-action" style="color:#0F6E56">Highest intent. Send connection request immediately.</div>
+    </div>
+    <div class="prio" style="background:#E1F5EE">
+      <div class="prio-num" style="color:#085041">Priority 2 — contact within 1 week</div>
+      <div class="prio-desc" style="color:#0F6E56">Posted on LinkedIn about APAC in past 14 days. OR company headcount growing 10%+. OR at a firm on your Tier 1 list with no prior outreach.</div>
+      <div class="prio-action" style="color:#0F6E56">Strong signal. Engage with content first, then connect.</div>
+    </div>
+  </div>
+  <div class="prio-row">
+    <div class="prio" style="background:#FAEEDA">
+      <div class="prio-num" style="color:#633806">Priority 3 — nurture cadence</div>
+      <div class="prio-desc" style="color:#854F0B">All other ICP matches without active intent signals. Set weekly saved search alerts to catch new entries.</div>
+      <div class="prio-action" style="color:#854F0B">Like/comment their posts for 1-2 weeks before connecting.</div>
+    </div>
+    <div class="prio" style="background:#FAECE7">
+      <div class="prio-num" style="color:#712B13">Discard — do not contact</div>
+      <div class="prio-desc" style="color:#993C1D">No APAC relevance signal. Pure fintech/software PE with no physical ops portfolio. Firm under $500M AUM with no APAC office.</div>
+      <div class="prio-action" style="color:#993C1D">Remove from list. Revisit only if new signals emerge.</div>
+    </div>
+  </div>
+
+  <div class="decision" style="background:#E6F1FB;border-color:#85B7EB">
+    <strong style="color:#0C447C">Final output: prioritized prospect list in Google Sheet / Apollo / Sales Navigator saved list</strong><br>
+    <span style="color:#185FA5;font-size:11px">Columns: name, title, firm, classification, extraction path, email, LinkedIn, signals, priority score, outreach hook</span>
+  </div>
+</div>
+
+<!-- EXECUTION TIMELINE -->
+<div class="stage" style="margin-top:1.5rem;padding-top:1rem;border-top:0.5px solid var(--color-border-tertiary)">
+  <div class="stage-header">
+    <div class="stage-num" style="background:var(--color-background-secondary);color:var(--color-text-secondary)">→</div>
+    <div><div class="stage-title">Execution sequence (recommended)</div></div>
+  </div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap">
+    <div style="flex:1;min-width:140px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px">
+      <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Week 1</div>
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px">Run stage 1-3 on 30-40 PE firms. Classify all. Get green-light.</div>
+    </div>
+    <div style="flex:1;min-width:140px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px">
+      <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Week 2</div>
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px">Run stage 4-5 for Tier 1 APAC-native firms. Extract prospects. Begin outreach to Priority 1.</div>
+    </div>
+    <div style="flex:1;min-width:140px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px">
+      <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Week 3</div>
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px">Run stage 4-5 for Tier 2 global firms' APAC teams + portfolio companies. Expand outreach.</div>
+    </div>
+    <div style="flex:1;min-width:140px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px 10px">
+      <div style="font-size:11px;font-weight:500;color:var(--color-text-primary)">Week 4</div>
+      <div style="font-size:11px;color:var(--color-text-secondary);margin-top:2px">Tier 3 SWFs + relationship nurture. Set up weekly signal alerts for ongoing monitoring.</div>
+    </div>
+  </div>
+</div>
+
+</div>
