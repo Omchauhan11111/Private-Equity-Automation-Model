@@ -1,0 +1,2812 @@
+{
+  "name": "PE (Prospects details) Workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1040552101,
+          "mode": "list",
+          "cachedResultName": "W2_Classification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=1040552101"
+        },
+        "options": {}
+      },
+      "id": "ce1e6731-4dc3-4714-8ebc-7a3446582b52",
+      "name": "Read W2 Classification Sheet2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -1808,
+        8064
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "5fc59000-390a-4af6-83b0-14be6e8890ff",
+      "name": "Loop Over Classified Firms2",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -1616,
+        8064
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "0e514d80-18d6-4920-899a-8640ed7b5b01",
+              "leftValue": "={{ $json._row_type }}",
+              "rightValue": "summary",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        640,
+        7888
+      ],
+      "id": "8046c680-3935-4cfb-a20b-55fe5b49202b",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "7acf5f2a-6814-4afd-8827-6c5230f56b3f",
+              "leftValue": "={{ $json._row_type }}",
+              "rightValue": "summary",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        640,
+        8240
+      ],
+      "id": "9d5188c2-10c0-4fc7-8bce-094124f8bc6d",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d90417f4-4d90-435e-9fa1-d7dbcb208ecc",
+              "leftValue": "={{ $json._row_type }}",
+              "rightValue": "summary",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        624,
+        8624
+      ],
+      "id": "19615f7c-75bf-409b-91d5-659664cfc07a",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.pe_firm_name }} operating partner value creation team portfolio operations director VP names titles APAC Asia\",\n  \"search_depth\": \"basic\",\n  \"include_answer\": true,\n  \"max_results\": 8\n}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "b7826e33-8b44-4bd5-a83c-99720e0d50a5",
+      "name": "Search A — Ops Team2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -880,
+        7808
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.pe_firm_name }} portfolio companies list manufacturing healthcare logistics industrials APAC expansion Asia\",\n  \"search_depth\": \"basic\",\n  \"include_answer\": true,\n  \"max_results\": 8\n}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "7cf9a6a4-4749-4074-887e-a08a0c1edeb9",
+      "name": "Search B — Portfolio Cos2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -880,
+        7968
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.pe_firm_name }} operating executive industrial advisor venture partner external advisor linkedin APAC Asia manufacturing\",\n  \"search_depth\": \"basic\",\n  \"include_answer\": true,\n  \"max_results\": 6\n}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "0eac9975-ec12-435f-9d18-fc64a9e70094",
+      "name": "Search C — Advisors2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -880,
+        8128
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.pe_firm_name }} managing director partner principal director vice president investment team manufacturing industrials APAC linkedin\",\n  \"search_depth\": \"basic\",\n  \"include_answer\": true,\n  \"max_results\": 6\n}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "4430d215-0d2b-4936-b52a-cac2d710d4a2",
+      "name": "Search D — Deal Team2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -880,
+        8320
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a PE firm prospect extraction and scoring engine.\nReturn ONLY a valid JSON object. No markdown, no explanation, no preamble.\n\n=== YOUR TASK ===\nBased on classification and search results, produce:\n1. Classification Summary (Tab 1 data)\n2. Prospect List (Tab 2 data) — scored prospects per path\n\n=== PATH RULES ===\nPath A (Centralized + Hybrid internal):\n- Scrape ops team: Operating Partner, VP Value Creation, Director Portfolio Ops, Capstone Associate\n- Score each: APAC location (30%), Sector relevance (25%), Seniority (20%), Firm APAC activity (15%), Engagement recency (10%)\n- Output: Name, Title, PE Firm, Operating Team Name, Location, Email (if found), LinkedIn URL, APAC Relevance Score, Sector Focus, Notes\n\nPath B (Decentralized + Network + Hybrid portfolio):\n- Extract portfolio companies → filter: ICP sectors (manufacturing, industrials, electronics, chemicals, healthcare, logistics) + non-APAC HQ only\n- Check APAC expansion signals: news, LinkedIn jobs, website\n- Pull C-suite: CEO, COO, VP Operations, VP Supply Chain, VP Strategy, VP International, CFO\n- Score each: Expansion signals (35%), Industry fit (25%), Title relevance (20%), Company size (10%), PE backer APAC strength (10%)\n- Output: Name, Title, Portfolio Company, PE Backer, Industry, HQ Country, Email (if found), LinkedIn URL, Expansion Signals, Signal Score, Notes\n\nPath C (Network + Hybrid deal partners):\n- LinkedIn search: Managing Director, Partner, Principal, Director with manufacturing/industrials/APAC keywords\n- Output: Name, Title, PE Firm, Location, Email (if found), LinkedIn URL, Sector Focus, APAC Relevance Notes\n\nPath D (ALL firms — deal team):\n- Investment Associate, Analyst, Senior Associate, Vice President, Director, Partner\n- Keywords: manufacturing, industrials, APAC, Asia\n- Output: Name, Title, PE Firm, Location, Email (if found), LinkedIn URL, Sector Focus, Priority Level\n\n=== PRIORITY TIERS ===\nPriority 1 (48h): Changed jobs past 30 days + ICP title OR firm announced APAC deal OR portfolio co posted APAC roles\nPriority 2 (1 week): Posted APAC on LinkedIn past 14 days OR headcount growing 10%+ OR Tier 1 firm no prior outreach\nPriority 3 (nurture): All other ICP matches without active intent signals\n\n=== OUTREACH HOOK ===\nWrite 1 specific sentence using: firm name + sector signal + APAC geography + recent deal/signal\nExample: \"Noticed Quadria's recent Apex Healthcare acquisition — we help PE-backed healthcare cos map APAC expansion ops\"\n\n=== RETURN EXACT JSON ===\n{\n  \"classification_summary\": {\n    \"pe_firm_name\":          \"\",\n    \"classification\":        \"\",\n    \"operating_team_name\":   \"\",\n    \"team_size_estimate\":    \"\",\n    \"apac_offices\":          \"\",\n    \"team_page_url\":         \"\",\n    \"portfolio_page_url\":    \"\",\n    \"confidence_score\":      0,\n    \"classification_evidence\": \"\",\n    \"targeting_approach\":    \"\",\n    \"relevant_portfolio_cos_count\": 0,\n    \"active_paths\":          []\n  },\n  \"prospects\": [\n    {\n      \"name\":              \"\",\n      \"title\":             \"\",\n      \"company\":           \"\",\n      \"pe_backer\":         \"\",\n      \"extraction_path\":   \"\",\n      \"email\":             \"\",\n      \"linkedin_url\":      \"\",\n      \"location\":          \"\",\n      \"industry\":          \"\",\n      \"expansion_signals\": \"\",\n      \"composite_score\":   0,\n      \"priority_tier\":     \"\",\n      \"outreach_hook\":     \"\",\n      \"notes\":             \"\"\n    }\n  ],\n  \"outreach_sequence\":       \"\",\n  \"week1_action\":            \"\",\n  \"week2_action\":            \"\",\n  \"week3_action\":            \"\"\n}\n\n=== FIRM DATA ===\nFIRM: {{ $('Path Router2').first().json.pe_firm_name }}\nWEBSITE: {{ $('Path Router2').first().json.website_url }}\nCOUNTRY: {{ $('Path Router2').first().json.company_country }}\nCLASSIFICATION: {{ $('Path Router2').first().json.classification }}\nCONFIDENCE: {{ $('Path Router2').first().json.classification_confidence }}\nCLASSIFICATION EVIDENCE: {{ $('Path Router2').first().json.classification_evidence }}\nOPERATING TEAM NAME: {{ $('Path Router2').first().json.operating_team_name || 'not identified' }}\nTEAM PAGE: {{ $('Path Router2').first().json.team_page_url || 'not found' }}\nPORTFOLIO PAGE: {{ $('Path Router2').first().json.portfolio_page_url || 'not found' }}\nACTIVE PATHS: {{ JSON.stringify($('Path Router2').first().json.active_paths) }}\nSTRONG FIT: {{ $('Path Router2').first().json.strong_fit }}\nAUM: ${{ $('Path Router2').first().json.aum_in_billions || '?' }}B\nHEADCOUNT: {{ $('Path Router2').first().json.headcount || '?' }}\nAPAC OFFICES: {{ $('Path Router2').first().json.apac_offices_detected }}\nSECTORS: {{ $('Path Router2').first().json.sectors_detected }}\nGATE 4 (Recent APAC Deals): {{ $('Path Router2').first().json.gate4_apac_deal_flow }} — {{ $('Path Router2').first().json.gate4_evidence }}\n\nPATH A SEARCH (ops team):\n{{ $if($('Search A — Ops Team2').isExecuted, ($('Search A — Ops Team2').first().json.results || []).map(r => r.title + ': ' + r.content).join(' | ').slice(0,1200), 'not run') }}\n\nPATH B SEARCH (portfolio cos):\n{{ $if($('Search B — Portfolio Cos2').isExecuted, ($('Search B — Portfolio Cos2').first().json.results || []).map(r => r.title + ': ' + r.content).join(' | ').slice(0,1200), 'not run') }}\n\nPATH C SEARCH (advisors):\n{{ $if($('Search C — Advisors2').isExecuted, ($('Search C — Advisors2').first().json.results || []).map(r => r.title + ': ' + r.content).join(' | ').slice(0,800), 'not run') }}\n\nPATH D SEARCH (deal team):\n{{ $if($('Search D — Deal Team2').isExecuted, ($('Search D — Deal Team2').first().json.results || []).map(r => r.title + ': ' + r.content).join(' | ').slice(0,800), 'not run') }}",
+        "options": {}
+      },
+      "id": "da274d9e-018c-44fd-b256-a3f63e4fe917",
+      "name": "Prospect Extraction AI2",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -416,
+        7792
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "e5bbeb3e-8988-4b9b-b699-172d6d27b5be",
+      "name": "Prospect Model (GPT-4o-mini)2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -336,
+        8064
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "HFxUFCHwnFxZPO8A",
+          "name": "OpenAI account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "c1",
+                    "leftValue": "={{ $json.classification }}",
+                    "rightValue": "=CENTRALIZED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Centralized"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "c2",
+                    "leftValue": "={{ $json.classification }}",
+                    "rightValue": "HYBRID",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Hybrid"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "c3",
+                    "leftValue": "={{ $json.classification }}",
+                    "rightValue": "NETWORK-BASED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Network-Based"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 1
+                },
+                "conditions": [
+                  {
+                    "id": "c4",
+                    "leftValue": "={{ $json.classification }}",
+                    "rightValue": "DECENTRALIZED",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Decentralized"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "749df7b3-e1e7-4edd-9cb8-a13a0476e49c",
+      "name": "Sheet Router2",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        80,
+        8032
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\nconst out = [];\nout.push({ json: { _row_type: 'summary', ...d.summary_row } });\nfor (const p of (d.prospect_rows || [])) {\n  out.push({ json: { _row_type: 'prospect', ...p } });\n}\nreturn out;"
+      },
+      "id": "21d049a5-50e9-4ae3-9f38-69c5c48f1cd7",
+      "name": "Split — Centralized2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        7568
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 35649455,
+          "mode": "list",
+          "cachedResultName": "Centralized — Classification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=35649455"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "pe_firm_name": "={{ $json.pe_firm_name }}",
+            "website_url": "={{ $json.website_url }}",
+            "company_linkedin_url": "={{ $json.company_linkedin_url }}",
+            "company_country": "={{ $json.company_country }}",
+            "industry": "={{ $json.industry }}",
+            "headcount": "={{ $json.headcount }}",
+            "aum_in_billions": "={{ $json.aum_in_billions }}",
+            "classification": "={{ $json.classification }}",
+            "operating_team_name": "={{ $json.operating_team_name }}",
+            "team_size_estimate": "={{ $json.team_size_estimate }}",
+            "apac_offices": "={{ $json.apac_offices }}",
+            "team_page_url": "={{ $json.team_page_url }}",
+            "portfolio_page_url": "={{ $json.portfolio_page_url }}",
+            "confidence_score": "={{ $json.confidence_score }}",
+            "classification_evidence": "={{ $json.classification_evidence }}",
+            "relevant_portfolio_cos": "={{ $json.relevant_portfolio_cos }}",
+            "targeting_approach": "={{ $json.targeting_approach }}",
+            "active_paths": "={{ $json.active_paths }}",
+            "week1_action": "={{ $json.week1_action }}",
+            "outreach_sequence": "={{ $json.outreach_sequence }}",
+            "week2_action": "={{ $json.week2_action }}",
+            "week3_action": "={{ $json.week3_action }}",
+            "run_date": "={{ $json.run_date }}",
+            "green_light": "={{ $json.green_light }}",
+            "_row_type": "={{ $json._row_type }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "_row_type",
+              "displayName": "_row_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pe_firm_name",
+              "displayName": "pe_firm_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "website_url",
+              "displayName": "website_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_linkedin_url",
+              "displayName": "company_linkedin_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_country",
+              "displayName": "company_country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "industry",
+              "displayName": "industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "headcount",
+              "displayName": "headcount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "aum_in_billions",
+              "displayName": "aum_in_billions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "classification",
+              "displayName": "classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "operating_team_name",
+              "displayName": "operating_team_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "team_size_estimate",
+              "displayName": "team_size_estimate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "apac_offices",
+              "displayName": "apac_offices",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "team_page_url",
+              "displayName": "team_page_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "portfolio_page_url",
+              "displayName": "portfolio_page_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "confidence_score",
+              "displayName": "confidence_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "classification_evidence",
+              "displayName": "classification_evidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "targeting_approach",
+              "displayName": "targeting_approach",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "relevant_portfolio_cos",
+              "displayName": "relevant_portfolio_cos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "active_paths",
+              "displayName": "active_paths",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "outreach_sequence",
+              "displayName": "outreach_sequence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "week1_action",
+              "displayName": "week1_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "week2_action",
+              "displayName": "week2_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "week3_action",
+              "displayName": "week3_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "run_date",
+              "displayName": "run_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "green_light",
+              "displayName": "green_light",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "76d0a2e7-e37a-4861-96c0-bb468e1b7882",
+      "name": "Write Summary — Centralized2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        896,
+        7440
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1285492122,
+          "mode": "list",
+          "cachedResultName": "Centralized — Prospects",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=1285492122"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "prospect_name": "={{ $json.prospect_name }}",
+            "title": "={{ $json.title }}",
+            "company": "={{ $json.company }}",
+            "_row_type": "={{ $json._row_type }}",
+            "pe_backer": "={{ $json.pe_backer }}",
+            "extraction_path": "={{ $json.extraction_path }}",
+            "email": "={{ $json.email }}",
+            "linkedin_url": "={{ $json.linkedin_url }}",
+            "location": "={{ $json.location }}",
+            "expansion_signals": "={{ $json.expansion_signals }}",
+            "composite_score": "={{ $json.composite_score }}",
+            "priority_tier": "={{ $json.priority_tier }}",
+            "outreach_hook": "={{ $json.outreach_hook }}",
+            "notes": "={{ $json.notes }}{{ $json.notes }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "_row_type",
+              "displayName": "_row_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "prospect_name",
+              "displayName": "prospect_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pe_backer",
+              "displayName": "pe_backer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "extraction_path",
+              "displayName": "extraction_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "linkedin_url",
+              "displayName": "linkedin_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "location",
+              "displayName": "location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "expansion_signals",
+              "displayName": "expansion_signals",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "composite_score",
+              "displayName": "composite_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "priority_tier",
+              "displayName": "priority_tier",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "outreach_hook",
+              "displayName": "outreach_hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "notes",
+              "displayName": "notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "24068499-cbe0-42d7-a906-82ef52aa94db",
+      "name": "Write Prospects — Centralized2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        896,
+        7632
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\nconst out = [];\n\nout.push({ json: { _row_type: 'summary', ...d.summary_row } });\n\nfor (const p of (d.prospect_rows || [])) {\n  out.push({ json: { _row_type: 'prospect', ...p } });\n}\n\nreturn out;"
+      },
+      "id": "85aaed95-a3cd-4cd7-a8f4-2b38e6652e76",
+      "name": "Split — Hybrid2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        7888
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1819901889,
+          "mode": "list",
+          "cachedResultName": "Hybrid — Classification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=1819901889"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {
+            "_row_type": "={{ $json._row_type }}",
+            "pe_firm_name": "={{ $json.pe_firm_name }}",
+            "website_url": "={{ $json.website_url }}",
+            "company_linkedin_url": "={{ $json.company_linkedin_url }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "_row_type",
+              "displayName": "_row_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pe_firm_name",
+              "displayName": "pe_firm_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "website_url",
+              "displayName": "website_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_linkedin_url",
+              "displayName": "company_linkedin_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_country",
+              "displayName": "company_country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "industry",
+              "displayName": "industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "headcount",
+              "displayName": "headcount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "aum_in_billions",
+              "displayName": "aum_in_billions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "classification",
+              "displayName": "classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "operating_team_name",
+              "displayName": "operating_team_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "team_size_estimate",
+              "displayName": "team_size_estimate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "apac_offices",
+              "displayName": "apac_offices",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "team_page_url",
+              "displayName": "team_page_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "portfolio_page_url",
+              "displayName": "portfolio_page_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "confidence_score",
+              "displayName": "confidence_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "classification_evidence",
+              "displayName": "classification_evidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "targeting_approach",
+              "displayName": "targeting_approach",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "relevant_portfolio_cos",
+              "displayName": "relevant_portfolio_cos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "active_paths",
+              "displayName": "active_paths",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "outreach_sequence",
+              "displayName": "outreach_sequence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "week1_action",
+              "displayName": "week1_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "week2_action",
+              "displayName": "week2_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "week3_action",
+              "displayName": "week3_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "run_date",
+              "displayName": "run_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "green_light",
+              "displayName": "green_light",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "75fc0a03-eed9-4195-8e12-54250f330e1b",
+      "name": "Write Summary — Hybrid2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        880,
+        7808
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1551405598,
+          "mode": "list",
+          "cachedResultName": "Hybrid — Prospects",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=1551405598"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "prospect_name",
+              "displayName": "prospect_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pe_backer",
+              "displayName": "pe_backer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "extraction_path",
+              "displayName": "extraction_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "linkedin_url",
+              "displayName": "linkedin_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "location",
+              "displayName": "location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "expansion_signals",
+              "displayName": "expansion_signals",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "composite_score",
+              "displayName": "composite_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "priority_tier",
+              "displayName": "priority_tier",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "outreach_hook",
+              "displayName": "outreach_hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "notes",
+              "displayName": "notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "d44710d0-24b4-471e-b13b-28bd583486b7",
+      "name": "Write Prospects — Hybrid2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        880,
+        7952
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\nconst out = [];\n\nout.push({ json: { _row_type: 'summary', ...d.summary_row } });\n\nfor (const p of (d.prospect_rows || [])) {\n  out.push({ json: { _row_type: 'prospect', ...p } });\n}\n\nreturn out;"
+      },
+      "id": "a495efdd-2999-4fcf-bbbe-fcbf527c1702",
+      "name": "Split — Network-Based2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        432,
+        8240
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 494547533,
+          "mode": "list",
+          "cachedResultName": "Network-Based — Classification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=494547533"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "_row_type",
+              "displayName": "_row_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pe_firm_name",
+              "displayName": "pe_firm_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "website_url",
+              "displayName": "website_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_linkedin_url",
+              "displayName": "company_linkedin_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_country",
+              "displayName": "company_country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "industry",
+              "displayName": "industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "headcount",
+              "displayName": "headcount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "aum_in_billions",
+              "displayName": "aum_in_billions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "classification",
+              "displayName": "classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "operating_team_name",
+              "displayName": "operating_team_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "team_size_estimate",
+              "displayName": "team_size_estimate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "apac_offices",
+              "displayName": "apac_offices",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "team_page_url",
+              "displayName": "team_page_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "portfolio_page_url",
+              "displayName": "portfolio_page_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "confidence_score",
+              "displayName": "confidence_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "classification_evidence",
+              "displayName": "classification_evidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "targeting_approach",
+              "displayName": "targeting_approach",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "relevant_portfolio_cos",
+              "displayName": "relevant_portfolio_cos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "active_paths",
+              "displayName": "active_paths",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "outreach_sequence",
+              "displayName": "outreach_sequence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "week1_action",
+              "displayName": "week1_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "week2_action",
+              "displayName": "week2_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "week3_action",
+              "displayName": "week3_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "run_date",
+              "displayName": "run_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "green_light",
+              "displayName": "green_light",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "efb5ac35-6df2-450a-8be7-6a818621ac7d",
+      "name": "Write Summary — Network-Based2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        864,
+        8128
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 991685081,
+          "mode": "list",
+          "cachedResultName": "Network-Based — Prospects",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=991685081"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "d68d1bd4-b328-40fd-8a35-3dd9d3180d3e",
+      "name": "Write Prospects — Network-Based2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        864,
+        8320
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\nconst out = [];\n\nout.push({ json: { _row_type: 'summary', ...d.summary_row } });\n\nfor (const p of (d.prospect_rows || [])) {\n  out.push({ json: { _row_type: 'prospect', ...p } });\n}\n\nreturn out;"
+      },
+      "id": "121744dd-3ed3-473d-98f3-87fcb26d0ba4",
+      "name": "Split — Decentralized2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        8624
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1777299942,
+          "mode": "list",
+          "cachedResultName": "Decentralized — Classification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=1777299942"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "_row_type",
+              "displayName": "_row_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pe_firm_name",
+              "displayName": "pe_firm_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "website_url",
+              "displayName": "website_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_linkedin_url",
+              "displayName": "company_linkedin_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_country",
+              "displayName": "company_country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "industry",
+              "displayName": "industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "headcount",
+              "displayName": "headcount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "aum_in_billions",
+              "displayName": "aum_in_billions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "classification",
+              "displayName": "classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "operating_team_name",
+              "displayName": "operating_team_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "team_size_estimate",
+              "displayName": "team_size_estimate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "apac_offices",
+              "displayName": "apac_offices",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "team_page_url",
+              "displayName": "team_page_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "portfolio_page_url",
+              "displayName": "portfolio_page_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "confidence_score",
+              "displayName": "confidence_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "classification_evidence",
+              "displayName": "classification_evidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "targeting_approach",
+              "displayName": "targeting_approach",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "relevant_portfolio_cos",
+              "displayName": "relevant_portfolio_cos",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "active_paths",
+              "displayName": "active_paths",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "outreach_sequence",
+              "displayName": "outreach_sequence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "week1_action",
+              "displayName": "week1_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "week2_action",
+              "displayName": "week2_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "week3_action",
+              "displayName": "week3_action",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "run_date",
+              "displayName": "run_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "green_light",
+              "displayName": "green_light",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "deab35ee-6830-4c0f-aee0-928e7a10fafd",
+      "name": "Write Summary — Decentralized2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        864,
+        8528
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1800669286,
+          "mode": "list",
+          "cachedResultName": "Decentralized — Prospects",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=1800669286"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "_row_type",
+              "displayName": "_row_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "prospect_name",
+              "displayName": "prospect_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "title",
+              "displayName": "title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pe_backer",
+              "displayName": "pe_backer",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "extraction_path",
+              "displayName": "extraction_path",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "linkedin_url",
+              "displayName": "linkedin_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "location",
+              "displayName": "location",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "industry",
+              "displayName": "industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "expansion_signals",
+              "displayName": "expansion_signals",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "composite_score",
+              "displayName": "composite_score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "priority_tier",
+              "displayName": "priority_tier",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "outreach_hook",
+              "displayName": "outreach_hook",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "notes",
+              "displayName": "notes",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pe_firm_name",
+              "displayName": "pe_firm_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "classification",
+              "displayName": "classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "run_date",
+              "displayName": "run_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "3322988e-4a73-4ea8-8e70-cbf9056c7d5e",
+      "name": "Write Prospects — Decentralized2",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        864,
+        8736
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 8
+      },
+      "id": "f434f0f4-f2a2-44ba-9128-78e574ecd40e",
+      "name": "Loop Back2",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1776,
+        8000
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const firm = $input.first().json;\nconst cls = (firm.classification || 'unclear').toLowerCase()\n  .replace(/-/g,'').replace(/ /g,'').replace(/_/g,'');\n\n// Path A = Centralized + Hybrid (internal ops team)\n// Path B = Decentralized + Network + Hybrid (portfolio cos)\n// Path C = Network + Hybrid (external advisors) — deal partners\n// Path D = ALL firms (deal team at PE firm)\nconst pathMap = {\n  'centralized':     { A:true,  B:false, C:false, D:true  },\n  'hybrid':          { A:true,  B:true,  C:true,  D:true  },\n  'networkbased':    { A:false, B:true,  C:true,  D:true  },\n  'network':         { A:false, B:true,  C:true,  D:true  },\n  'decentralized':   { A:false, B:true,  C:false, D:true  },\n  'assetmanagement': { A:false, B:false, C:false, D:false },\n  'assetmgmt':       { A:false, B:false, C:false, D:false },\n  'unclear':         { A:false, B:true,  C:false, D:true  }\n};\n\nconst paths = pathMap[cls] || pathMap['unclear'];\nconst active = Object.entries(paths).filter(([k,v])=>v).map(([k])=>'Path '+k);\n\nreturn [{ json: { ...firm, run_path_A:paths.A, run_path_B:paths.B, run_path_C:paths.C, run_path_D:paths.D, active_paths:active, classification_normalized:cls }}];\n"
+      },
+      "id": "06211844-7f4e-478d-8493-a9d8f6dacca3",
+      "name": "Path Router2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1184,
+        8080
+      ]
+    },
+    {
+      "parameters": {
+        "numberInputs": 4
+      },
+      "id": "0a7d9f2f-aaba-461b-98d3-9d7b625cc965",
+      "name": "Merge All Searches2",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        -560,
+        8032
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const firm = $('Path Router2').first().json;\nconst aiResp = $('Prospect Extraction AI2').first().json;\nlet raw = aiResp.output || aiResp.text || '';\nlet ai = {};\n\ntry {\n  const m = raw.match(/\\{[\\s\\S]*\\}/);\n  if (!m) throw new Error('no JSON');\n  ai = JSON.parse(m[0]);\n} catch(e) {\n  ai = {\n    classification_summary: {\n      pe_firm_name: firm.pe_firm_name,\n      classification: firm.classification,\n      operating_team_name: firm.operating_team_name || 'None identified',\n      team_size_estimate: 'N/A',\n      apac_offices: JSON.stringify(firm.apac_offices_detected || []),\n      team_page_url: firm.team_page_url || '',\n      portfolio_page_url: firm.portfolio_page_url || '',\n      confidence_score: firm.classification_confidence || 0,\n      classification_evidence: firm.classification_evidence || '',\n      targeting_approach: 'Manual review needed',\n      relevant_portfolio_cos_count: 0,\n      active_paths: firm.active_paths || []\n    },\n    prospects: [],\n    outreach_sequence: 'Level 1-2 → Level 5 → Level 3-4',\n    week1_action: '', week2_action: '', week3_action: ''\n  };\n}\n\nconst cs = ai.classification_summary || {};\nconst prospects = ai.prospects || [];\n\n// ── Tab 1: Classification Summary row ─────────────────────\nconst summaryRow = {\n  pe_firm_name:              firm.pe_firm_name,\n  website_url:               firm.website_url,\n  company_linkedin_url:      firm.company_linkedin_url,\n  company_country:           firm.company_country,\n  industry:                  firm.industry,\n  headcount:                 firm.headcount,\n  aum_in_billions:           firm.aum_in_billions,\n  classification:            firm.classification,\n  operating_team_name:       cs.operating_team_name   || firm.operating_team_name || 'None identified',\n  team_size_estimate:        cs.team_size_estimate    || 'N/A',\n  apac_offices:              cs.apac_offices          || JSON.stringify(firm.apac_offices_detected || []),\n  team_page_url:             cs.team_page_url         || firm.team_page_url || '',\n  portfolio_page_url:        cs.portfolio_page_url    || firm.portfolio_page_url || '',\n  confidence_score:          cs.confidence_score      || firm.classification_confidence || 0,\n  classification_evidence:   cs.classification_evidence || firm.classification_evidence || '',\n  targeting_approach:        cs.targeting_approach    || '',\n  relevant_portfolio_cos:    cs.relevant_portfolio_cos_count || 0,\n  active_paths:              JSON.stringify(cs.active_paths || firm.active_paths || []),\n  outreach_sequence:         ai.outreach_sequence     || '',\n  week1_action:              ai.week1_action          || '',\n  week2_action:              ai.week2_action          || '',\n  week3_action:              ai.week3_action          || '',\n  run_date:                  firm.run_date || new Date().toISOString().split('T')[0],\n  green_light:               'PENDING'\n};\n\n// ── Tab 2: Prospect rows ───────────────────────────────────\nconst prospectRows = prospects.map(p => ({\n  prospect_name:      p.name             || '',\n  title:              p.title            || '',\n  company:            p.company          || firm.pe_firm_name,\n  pe_backer:          p.pe_backer        || (p.extraction_path === 'Path B' ? firm.pe_firm_name : 'N/A'),\n  extraction_path:    p.extraction_path  || '',\n  email:              p.email            || '',\n  linkedin_url:       p.linkedin_url     || '',\n  location:           p.location         || '',\n  industry:           p.industry         || '',\n  expansion_signals:  p.expansion_signals || '',\n  composite_score:    p.composite_score  || 0,\n  priority_tier:      p.priority_tier    || 'Priority 3',\n  outreach_hook:      p.outreach_hook    || '',\n  notes:              p.notes            || '',\n  pe_firm_name:       firm.pe_firm_name,\n  classification:     firm.classification,\n  run_date:           firm.run_date || new Date().toISOString().split('T')[0]\n}));\n\nreturn [{ json: {\n  classification: firm.classification,\n  summary_row:    summaryRow,\n  prospect_rows:  prospectRows,\n  prospect_count: prospectRows.length\n}}];\n"
+      },
+      "id": "e3e60ca6-ed4e-449c-bcb2-7b7ce4fecbfa",
+      "name": "Result Builder2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -112,
+        8064
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a82d6708-0800-46d4-9566-6c2b098c0cf5",
+              "leftValue": "={{ $json._row_type }}",
+              "rightValue": "summary",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        624,
+        7568
+      ],
+      "id": "f723bf18-79d3-4ffb-8e8a-0efdbd60b21f",
+      "name": "If11"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -2096,
+        8048
+      ],
+      "id": "d67f9dda-6d1e-4436-b086-38823c229582",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "amount": 15
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1792,
+        8816
+      ],
+      "id": "8b46145c-602d-4e21-803c-27ef6d3d7651",
+      "name": "Wait",
+      "webhookId": "0543bc19-552f-4b89-adbe-a3fb08bc3739"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Read W2 Classification Sheet2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Classified Firms2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Classified Firms2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Path Router2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Write Summary — Hybrid2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Write Prospects — Hybrid2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Write Summary — Network-Based2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Write Prospects — Network-Based2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Write Summary — Decentralized2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Write Prospects — Decentralized2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search A — Ops Team2": {
+      "main": [
+        [
+          {
+            "node": "Merge All Searches2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search B — Portfolio Cos2": {
+      "main": [
+        [
+          {
+            "node": "Merge All Searches2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Search C — Advisors2": {
+      "main": [
+        [
+          {
+            "node": "Merge All Searches2",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Search D — Deal Team2": {
+      "main": [
+        [
+          {
+            "node": "Merge All Searches2",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Prospect Extraction AI2": {
+      "main": [
+        [
+          {
+            "node": "Result Builder2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prospect Model (GPT-4o-mini)2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Prospect Extraction AI2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheet Router2": {
+      "main": [
+        [
+          {
+            "node": "Split — Centralized2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split — Hybrid2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split — Network-Based2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Split — Decentralized2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split — Centralized2": {
+      "main": [
+        [
+          {
+            "node": "If11",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Summary — Centralized2": {
+      "main": [
+        [
+          {
+            "node": "Loop Back2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Prospects — Centralized2": {
+      "main": [
+        [
+          {
+            "node": "Loop Back2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Split — Hybrid2": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Summary — Hybrid2": {
+      "main": [
+        [
+          {
+            "node": "Loop Back2",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Write Prospects — Hybrid2": {
+      "main": [
+        [
+          {
+            "node": "Loop Back2",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Split — Network-Based2": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Summary — Network-Based2": {
+      "main": [
+        [
+          {
+            "node": "Loop Back2",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Write Prospects — Network-Based2": {
+      "main": [
+        [
+          {
+            "node": "Loop Back2",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Split — Decentralized2": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Summary — Decentralized2": {
+      "main": [
+        [
+          {
+            "node": "Loop Back2",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Write Prospects — Decentralized2": {
+      "main": [
+        [
+          {
+            "node": "Loop Back2",
+            "type": "main",
+            "index": 7
+          }
+        ]
+      ]
+    },
+    "Loop Back2": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Path Router2": {
+      "main": [
+        [
+          {
+            "node": "Search A — Ops Team2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search B — Portfolio Cos2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search C — Advisors2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search D — Deal Team2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge All Searches2": {
+      "main": [
+        [
+          {
+            "node": "Prospect Extraction AI2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Result Builder2": {
+      "main": [
+        [
+          {
+            "node": "Sheet Router2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If11": {
+      "main": [
+        [
+          {
+            "node": "Write Summary — Centralized2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Write Prospects — Centralized2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read W2 Classification Sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Classified Firms2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "7992f314-ea29-4c23-b83f-b4179051bf24",
+  "meta": {
+    "instanceId": "ca229486879688ee6015d8ac015584cfbf35615398e73c62051ae01ed19542c5"
+  },
+  "id": "AaujqQpeQzy2I3GI",
+  "tags": []
+}

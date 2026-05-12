@@ -1,0 +1,701 @@
+{
+  "name": "PE (Decentralized and Hybrid Portfolio) Workflow 4",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "={{ $json.portfolio_page_url || $json.website_url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "tavilyApi",
+        "options": {
+          "timeout": 25000
+        }
+      },
+      "id": "11a0e869-a603-466c-bf47-463beab9be83",
+      "name": "Fetch 1 — Portfolio Page Direct",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2608,
+        12576
+      ],
+      "credentials": {
+        "tavilyApi": {
+          "id": "Jhh1a8VYLLAOZx8f",
+          "name": "Tavily account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/extract",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "tavilyApi",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"urls\": [\"{{ $json.portfolio_page_url || $json.website_url }}\"],\n  \"extract_depth\": \"advanced\"\n}",
+        "options": {
+          "timeout": 25000
+        }
+      },
+      "id": "b0f72647-32e9-4070-8d02-cdf87cf44e18",
+      "name": "Fetch 2 — Tavily Extract (JS Rendered)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2608,
+        12736
+      ],
+      "credentials": {
+        "tavilyApi": {
+          "id": "Jhh1a8VYLLAOZx8f",
+          "name": "Tavily account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.pe_firm_name }} portfolio manufacturing healthcare technology logistics industrials investments\",\n  \"search_depth\": \"advanced\",\n  \"include_answer\": true,\n  \"max_results\": 10\n}",
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "id": "c55f1953-539e-47be-adb5-77e14a258bbe",
+      "name": "Search 2 — Sector Portfolio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2608,
+        13056
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.pe_firm_name }} portfolio companies Asia Europe North America APAC region investments\",\n  \"search_depth\": \"advanced\",\n  \"include_answer\": true,\n  \"max_results\": 10\n}",
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "id": "642940a1-2b4d-4e7f-b873-01f8caa10aaa",
+      "name": "Search 3 — Region Portfolio",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2608,
+        13216
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.pe_firm_name }} backed invested portfolio company crunchbase pitchbook\",\n  \"search_depth\": \"advanced\",\n  \"include_answer\": true,\n  \"max_results\": 10\n}",
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "id": "1f2aaefc-a462-4731-869e-94812f2c13f7",
+      "name": "Search 4 — Crunchbase & News",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2608,
+        13376
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.pe_firm_name }} acquires invests buys stake deal 2022 2023 2024 2025\",\n  \"search_depth\": \"advanced\",\n  \"include_answer\": true,\n  \"max_results\": 10\n}",
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "id": "c31c2c43-f4e5-4249-82e9-703d0a80c182",
+      "name": "Search 5 — Deal News",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2608,
+        13536
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a PE portfolio company extraction engine.\nReturn ONLY a valid JSON object. No markdown, no explanation, no preamble.\n\n=== YOUR TASK ===\nExtract EVERY portfolio company of \"{{ $json.pe_firm_name }}\" from the cleaned text below.\nThe text has already been filtered — focus only on extracting company names and their details.\nDo NOT stop early. Extract ALL companies you can find — target 50-200 if data allows.\n\n=== FOR EACH COMPANY ===\n- company_name: Exact company name (REQUIRED)\n- industry: Primary sector (Technology, Healthcare, Manufacturing, Logistics, Fintech, Energy, Real Estate, Consumer, Education, Other)\n- region: Geographic region (Southeast Asia, South Asia, East Asia, Europe, North America, MENA, Africa, Latin America, Oceania, Global)\n- hq_country: HQ country name\n- website: Website URL if found, else empty string\n\n=== RULES ===\n1. Extract ONLY real portfolio companies — not the PE firm itself\n2. No duplicates\n3. Unknown = empty string, never guess\n4. Be exhaustive — every company name you see should be in the output\n\n=== RETURN JSON ===\n{\n  \"pe_firm_name\": \"{{ $json.pe_firm_name }}\",\n  \"total_found\": 0,\n  \"portfolio_companies\": [\n    {\n      \"company_name\": \"\",\n      \"industry\": \"\",\n      \"region\": \"\",\n      \"hq_country\": \"\",\n      \"website\": \"\"\n    }\n  ]\n}\n\n=== CLEANED SOURCE DATA ===\nFIRM: {{ $json.pe_firm_name }}\nCLASSIFICATION: {{ $json.classification }}\nPORTFOLIO PAGE: {{ $json.portfolio_page_url || 'not found' }}\n\n{{ $json.cleaned_text }}",
+        "options": {}
+      },
+      "id": "16104cbc-ff8a-41da-ae20-96b15acfdb3a",
+      "name": "Portfolio Extraction AI",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -1776,
+        12784
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "f808b926-1659-4495-9dd8-e2bd6a7e10c8",
+      "name": "Portfolio Model (GPT-4o)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -1808,
+        13008
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "HFxUFCHwnFxZPO8A",
+          "name": "OpenAI account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Portfolio Companies",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "pe_firm_name": "={{ $json.pe_firm_name }}",
+            "classification": "={{ $json.classification }}",
+            "company_name": "={{ $json.company_name }}",
+            "industry": "={{ $json.industry }}",
+            "region": "={{ $json.region }}",
+            "hq_country": "={{ $json.hq_country }}",
+            "website": "={{ $json.website }}",
+            "total_found": "={{ $json.total_found }}",
+            "run_date": "={{ $json.run_date }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "pe_firm_name",
+              "displayName": "pe_firm_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "classification",
+              "displayName": "classification",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "industry",
+              "displayName": "industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "region",
+              "displayName": "region",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "hq_country",
+              "displayName": "hq_country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "website",
+              "displayName": "website",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total_found",
+              "displayName": "total_found",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "run_date",
+              "displayName": "run_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "1027202e-f4f3-4835-83bf-e280d52084e5",
+      "name": "Write to Portfolio Companies Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -1264,
+        12944
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1040552101,
+          "mode": "list",
+          "cachedResultName": "W2_Classification",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=1040552101"
+        },
+        "options": {}
+      },
+      "id": "5766e14d-2cc0-4c4e-acb7-3f0a7659515a",
+      "name": "Read Classification Sheet1",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -3552,
+        12960
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const rows = $input.all();\nconst filtered = rows.filter(item => {\n  const cls = (item.json.classification || '').toLowerCase().trim();\n  return cls === 'decentralized' || cls === 'hybrid';\n});\nif (filtered.length === 0) throw new Error('No Decentralized or Hybrid firms found');\nreturn filtered.map(item => ({ json: {\n  pe_firm_name:       item.json.pe_firm_name || '',\n  classification:     item.json.classification || '',\n  website_url:        item.json.website_url || '',\n  portfolio_page_url: item.json.portfolio_page_url || '',\n  company_country:    item.json.company_country || '',\n  run_date:           new Date().toISOString().split('T')[0]\n}}));"
+      },
+      "id": "3348a5c9-366d-4b61-b51a-c3e464a65be6",
+      "name": "Filter Decentralized & Hybrid1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3312,
+        12960
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "4d6eab7a-8905-4f27-81d4-38ce9b7ee59c",
+      "name": "Loop Over Firms1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -3072,
+        12960
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.pe_firm_name }} portfolio companies full list all investments\",\n  \"search_depth\": \"advanced\",\n  \"include_answer\": true,\n  \"max_results\": 10\n}",
+        "options": {
+          "timeout": 20000
+        }
+      },
+      "id": "f6111d5e-268b-4f0b-9e65-0b71f26c46f3",
+      "name": "Search 1 — Full Portfolio List1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2608,
+        12896
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "numberInputs": 7
+      },
+      "id": "59da2402-aa7b-4d89-bd0a-53e26d5689b3",
+      "name": "Merge All 7 Sources1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        -2240,
+        13088
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const firm = $('Loop Over Firms1').item.json;\nconst aiResp = $('Portfolio Extraction AI').first().json;\nlet raw = aiResp.output || aiResp.text || '';\nlet ai = {};\n\ntry {\n  const m = raw.match(/\\{[\\s\\S]*\\}/);\n  if (!m) throw new Error('no JSON found');\n  ai = JSON.parse(m[0]);\n} catch(e) {\n  ai = { pe_firm_name: firm.pe_firm_name, total_found: 0, portfolio_companies: [] };\n}\n\nconst companies = (ai.portfolio_companies || []).filter(pc => pc.company_name && pc.company_name.trim() !== '');\n\n// Deduplicate by company_name (case-insensitive)\nconst seen = new Set();\nconst unique = companies.filter(pc => {\n  const key = pc.company_name.toLowerCase().trim();\n  if (seen.has(key)) return false;\n  seen.add(key);\n  return true;\n});\n\nif (unique.length === 0) {\n  return [{ json: {\n    pe_firm_name:   firm.pe_firm_name,\n    classification: firm.classification,\n    company_name:   'NO PORTFOLIO DATA FOUND',\n    industry:       '', region: '', hq_country: '', website: '',\n    total_found:    0,\n    run_date:       firm.run_date\n  }}];\n}\n\nreturn unique.map((pc, idx) => ({ json: {\n  pe_firm_name:   firm.pe_firm_name,\n  classification: firm.classification,\n  company_name:   pc.company_name.trim(),\n  industry:       pc.industry   || '',\n  region:         pc.region     || '',\n  hq_country:     pc.hq_country || '',\n  website:        pc.website    || '',\n  total_found:    unique.length,\n  run_date:       firm.run_date\n}}));"
+      },
+      "id": "1bee0301-41a5-4600-a9bf-ffb2724d8f5a",
+      "name": "Portfolio Result Builder1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -1472,
+        12912
+      ]
+    },
+    {
+      "parameters": {
+        "numberInputs": 1
+      },
+      "id": "a11e0014-8bca-4580-b73c-0dedf561ed2e",
+      "name": "Loop Back1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        -1040,
+        13040
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ── Smart Data Cleaner ──\n// Saara raw data leke sirf useful text nikaalte hain\n\nconst firm = $('Loop Over Firms1').item.json;\n\n// Helper: HTML tags hatao\nfunction stripHtml(str) {\n  if (!str) return '';\n  return str\n    .replace(/<script[\\s\\S]*?<\\/script>/gi, '')\n    .replace(/<style[\\s\\S]*?<\\/style>/gi, '')\n    .replace(/<[^>]+>/g, ' ')\n    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')\n    .replace(/&nbsp;/g, ' ').replace(/&#\\d+;/g, ' ')\n    .replace(/\\s{3,}/g, '\\n')\n    .trim();\n}\n\n// Helper: Ek source ka text nikalo\nfunction extractText(nodeRef, fieldChain) {\n  try {\n    let data = nodeRef;\n    for (const f of fieldChain) {\n      if (data === null || data === undefined) return '';\n      data = data[f];\n    }\n    return (data || '').toString();\n  } catch(e) { return ''; }\n}\n\n// ── Collect raw texts from all sources ──\nconst sources = [];\n\n// Source 1: Direct HTTP fetch\ntry {\n  if ($('Fetch 1 — Portfolio Page Direct').isExecuted) {\n    const raw = $('Fetch 1 — Portfolio Page Direct').first().json;\n    const text = stripHtml(raw.data || raw.body || raw.html || '');\n    if (text.length > 100) sources.push({ name: 'HTTP_FETCH', text });\n  }\n} catch(e) {}\n\n// Source 2: Tavily Extract (JS rendered)\ntry {\n  if ($('Fetch 2 — Tavily Extract (JS Rendered)').isExecuted) {\n    const results = $('Fetch 2 — Tavily Extract (JS Rendered)').first().json.results || [];\n    const text = results.map(r => r.raw_content || r.text || '').join('\\n');\n    if (text.length > 100) sources.push({ name: 'TAVILY_EXTRACT', text: text.slice(0, 4000) });\n  }\n} catch(e) {}\n\n// Sources 3-7: Tavily searches\nconst searchNodes = [\n  'Search 1 — Full Portfolio List',\n  'Search 2 — Sector Portfolio',\n  'Search 3 — Region Portfolio',\n  'Search 4 — Crunchbase & News',\n  'Search 5 — Deal News'\n];\n\nfor (const nodeName of searchNodes) {\n  try {\n    if ($(nodeName).isExecuted) {\n      const data = $(nodeName).first().json;\n      const answer = data.answer || '';\n      const results = (data.results || []).map(r => `${r.title}: ${r.content}`).join('\\n');\n      const combined = (answer + '\\n' + results).trim();\n      if (combined.length > 50) sources.push({ name: nodeName, text: combined });\n    }\n  } catch(e) {}\n}\n\n// ── Smart Filter: sirf company-relevant lines rakho ──\nfunction isRelevantLine(line) {\n  const l = line.toLowerCase();\n  // Skip navigation/footer garbage\n  const skipWords = ['cookie', 'privacy policy', 'terms of use', 'copyright', \n    'all rights reserved', 'sign in', 'log in', 'subscribe', 'newsletter',\n    'facebook', 'twitter', 'linkedin.com', 'instagram', 'youtube',\n    'menu', 'search', 'home', 'about us', 'contact us', 'careers at',\n    'javascript', 'function(', 'var ', 'const ', 'window.', 'document.',\n    '<!doctype', '<html', 'css', '.js', 'analytics', 'gtag'];\n  if (skipWords.some(w => l.includes(w))) return false;\n  // Must be reasonable length\n  if (line.trim().length < 5 || line.trim().length > 300) return false;\n  return true;\n}\n\n// Combine all sources, clean line by line\nconst allLines = new Set();\nfor (const src of sources) {\n  const lines = src.text.split('\\n');\n  for (const line of lines) {\n    const cleaned = line.trim();\n    if (isRelevantLine(cleaned)) {\n      allLines.add(cleaned);\n    }\n  }\n}\n\n// Join and limit to ~6000 chars so AI gets focused input\nconst cleanedText = Array.from(allLines).join('\\n').slice(0, 6000);\n\nreturn [{ json: {\n  pe_firm_name:       firm.pe_firm_name,\n  classification:     firm.classification,\n  portfolio_page_url: firm.portfolio_page_url || '',\n  website_url:        firm.website_url || '',\n  run_date:           firm.run_date,\n  cleaned_text:       cleanedText,\n  sources_used:       sources.map(s => s.name),\n  raw_char_count:     sources.reduce((a, s) => a + s.text.length, 0),\n  cleaned_char_count: cleanedText.length\n}}];"
+      },
+      "id": "95bee23b-958e-4d02-a668-aace6e354e45",
+      "name": "Smart Data Cleaner1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2048,
+        12800
+      ]
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -3792,
+        12976
+      ],
+      "id": "b868b93a-1367-4857-8fb5-ddc738d12abe",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Fetch 1 — Portfolio Page Direct": {
+      "main": [
+        [
+          {
+            "node": "Merge All 7 Sources1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch 2 — Tavily Extract (JS Rendered)": {
+      "main": [
+        [
+          {
+            "node": "Merge All 7 Sources1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Search 2 — Sector Portfolio": {
+      "main": [
+        [
+          {
+            "node": "Merge All 7 Sources1",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Search 3 — Region Portfolio": {
+      "main": [
+        [
+          {
+            "node": "Merge All 7 Sources1",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Search 4 — Crunchbase & News": {
+      "main": [
+        [
+          {
+            "node": "Merge All 7 Sources1",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Search 5 — Deal News": {
+      "main": [
+        [
+          {
+            "node": "Merge All 7 Sources1",
+            "type": "main",
+            "index": 6
+          }
+        ]
+      ]
+    },
+    "Portfolio Model (GPT-4o)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Portfolio Extraction AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Portfolio Extraction AI": {
+      "main": [
+        [
+          {
+            "node": "Portfolio Result Builder1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write to Portfolio Companies Sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Back1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Classification Sheet1": {
+      "main": [
+        [
+          {
+            "node": "Filter Decentralized & Hybrid1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Decentralized & Hybrid1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Firms1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Firms1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Fetch 1 — Portfolio Page Direct",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fetch 2 — Tavily Extract (JS Rendered)",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search 1 — Full Portfolio List1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search 2 — Sector Portfolio",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search 3 — Region Portfolio",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search 4 — Crunchbase & News",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Search 5 — Deal News",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search 1 — Full Portfolio List1": {
+      "main": [
+        [
+          {
+            "node": "Merge All 7 Sources1",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge All 7 Sources1": {
+      "main": [
+        [
+          {
+            "node": "Smart Data Cleaner1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Portfolio Result Builder1": {
+      "main": [
+        [
+          {
+            "node": "Write to Portfolio Companies Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Back1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Firms1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Smart Data Cleaner1": {
+      "main": [
+        [
+          {
+            "node": "Portfolio Extraction AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read Classification Sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "410b26e0-5555-4dfb-a4c6-460bf61456f5",
+  "meta": {
+    "instanceId": "ca229486879688ee6015d8ac015584cfbf35615398e73c62051ae01ed19542c5"
+  },
+  "id": "TFOcJI91eAkwmtwP",
+  "tags": []
+}

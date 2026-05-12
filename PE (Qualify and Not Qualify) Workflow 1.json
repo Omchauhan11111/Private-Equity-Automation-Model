@@ -1,0 +1,1268 @@
+{
+  "name": "PE (Qualify and Not Qualify) Workflow 1",
+  "nodes": [
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 2099756991,
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=2099756991"
+        },
+        "options": {}
+      },
+      "id": "335f9e3a-7379-4e3f-8244-f0e1f663e629",
+      "name": "Read Raw Firms Sheet",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -6848,
+        10400
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "454677cc-403c-4963-9143-06ff13a7db08",
+      "name": "Merge Search Results",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        -4400,
+        9552
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a strict PE firm qualification engine.\nReturn ONLY a valid JSON object. No markdown, no explanation, no preamble.\n\n=== QUALIFICATION RULE — MANDATORY ===\n\nQUALIFIED = Gate 1 PASS AND Gate 2 PASS (both mandatory)\nDISQUALIFIED = Gate 1 FAIL OR Gate 2 FAIL (either one fails = disqualified)\n\nGate 3 = evaluate and write evidence but does NOT affect qualification decision\nGate 4 = evaluate and write evidence but does NOT affect qualification decision\n\nStrong Fit = Gate 1 PASS AND Gate 2 PASS (same as qualified)\n\n=== GATE 1 — APAC Investment Mandate ===\n\nSTEP 1 — COUNTRY CHECK (HIGHEST PRIORITY — check this first):\nIf COMPANY COUNTRY is any of these → Gate 1 = PASS immediately, no further check:\nSingapore, Hong Kong, India, Indonesia, Australia, Japan, China, South Korea,\nMalaysia, Thailand, Taiwan, Vietnam, Philippines, New Zealand, Myanmar, Cambodia,\nBangladesh, Sri Lanka, Pakistan, Nepal, Brunei, Laos\n\nSTEP 2 — If country not in list above, check:\n- Website mentions offices in APAC cities: Singapore, Hong Kong, Mumbai, Jakarta,\n  Sydney, Tokyo, Beijing, Shanghai, Seoul, Kuala Lumpur, Bangkok, Taipei,\n  Melbourne, New Delhi, Manila, Ho Chi Minh City\n- Portfolio companies have APAC operations or customers\n- Keywords mention: Asia, APAC, Southeast Asia, South Asia, Asia Pacific\n- AUM or deal search mentions APAC investments\n→ Any YES = PASS | All NO = FAIL | No data at all = UNKNOWN\n\nRULE: Never say \"zero APAC presence\" for a firm headquartered in Singapore,\nIndia, Indonesia, Hong Kong, or any APAC country above.\n\n=== GATE 2 — Physical Operations Portfolio ===\n\nANALYZE the portfolio and keywords carefully.\nLook at: website text, sectors_detected, keywords, industry field.\n\nPASS — if portfolio contains ANY of these:\n\nHEALTHCARE & LIFE SCIENCES (ALL count as physical ops):\n→ hospitals, clinics, diagnostics, imaging, labs\n→ pharma, pharmaceuticals, drug manufacturing\n→ biotech, biopharma, life sciences, biosciences\n→ medical devices, medtech, surgical tools\n→ CROs, clinical trials, healthcare services\n→ dental, eye care, fertility, elder care\n→ health insurance with physical networks\n\nINDUSTRIALS & HARD ASSETS:\n→ manufacturing, factories, industrials\n→ infrastructure, real assets, utilities, power plants\n→ logistics, supply chain, warehousing, cold chain\n→ energy — oil, gas, solar, wind, renewables\n→ chemicals, agrochemicals, specialty chemicals\n→ automotive, EV, auto components\n→ packaging, building materials, construction\n→ food & beverage manufacturing\n→ transportation, ports, airports\n\nCONSUMER PHYSICAL:\n→ retail chains, restaurant chains, hospitality\n→ consumer goods with manufacturing\n→ physical education campuses\n\nFAIL — ONLY if portfolio is confirmed 70%+ in:\n→ pure SaaS, pure cloud software, pure mobile apps\n→ pure fintech with no physical ops\n→ pure crypto/blockchain\n→ pure social media or digital advertising\n\nUNKNOWN — if zero portfolio information found anywhere\n\nSPECIAL RULES FOR GATE 2:\n- Any firm with \"bio\", \"biotech\", \"biopharma\", \"health\", \"pharma\", \"medtech\",\n  \"life sciences\" in their NAME → Gate 2 = PASS always\n- VC firms investing in biotech/medtech/healthtech = PASS\n- Mixed portfolio (digital + physical) = PASS if any physical sector present\n- \"venture capital & private equity\" industry + healthcare keywords = PASS\n- When genuinely unsure → UNKNOWN (not FAIL)\n\n=== GATE 3 — Right Size (evidence only, does not affect decision) ===\n\nEvaluate and report but result does NOT change qualification.\n\nPASS: AUM $500M–$15B AND headcount 20–500\nFAIL: AUM confirmed below $500M or above $15B, headcount confirmed outside 20–500\nUNKNOWN: data missing or ambiguous\n\nAUM EXTRACTION:\n- Look for: \"$Xb\", \"$X billion\", \"USD X billion\", \"US$X billion\", \"$X million\"\n- Convert millions: $500M = 0.5B\n- Use most recent value if multiple found\n- Return as decimal: 1.5, 4.0, 0.5\n\nSWF EXCEPTION: GIC, Temasek, INA → gate3 = \"pass\", gate3_swf_bypass = true\n\n=== GATE 4 — APAC Deal Flow (evidence only, does not affect decision) ===\n\nEvaluate and report but result does NOT change qualification.\n\nPASS: 1+ APAC deal/investment/acquisition in 2024–2026\nFAIL: no recent APAC activity found\nUNKNOWN: insufficient data\n\n=== CONFIDENCE SCORING ===\n90–100: country confirmed APAC + portfolio very clear\n70–89: strong signals from multiple sources\n50–69: partial signals, some gaps\nBelow 50: weak or missing data\n\n=== 10 CRITICAL RULES ===\n1. Gate 1 AND Gate 2 both PASS = QUALIFIED. This is the only path to qualified.\n2. Gate 1 FAIL OR Gate 2 FAIL = DISQUALIFIED. No exceptions.\n3. APAC country HQ = Gate 1 PASS always. Never contradict this.\n4. Healthcare/biotech/pharma/medtech/life sciences in name or portfolio = Gate 2 PASS always.\n5. Gate 3 and Gate 4 results do NOT change qualify/disqualify outcome.\n6. Empty website = rely on keywords, industry field, AUM search, deal search.\n7. Mixed portfolio (digital + physical) = Gate 2 PASS.\n8. AUM found in search snippets = use it. Do not ignore it.\n9. Never FAIL Gate 2 for healthcare firms. Never FAIL Gate 1 for APAC HQ firms.\n10. When unsure on Gate 2 → UNKNOWN. Never FAIL without clear evidence of digital-only portfolio.\n\n=== RETURN THIS EXACT JSON — NO OTHER TEXT ===\n{\n  \"gate1_apac_mandate\":    \"\",\n  \"gate1_evidence\":        \"\",\n  \"gate2_physical_ops\":    \"\",\n  \"gate2_evidence\":        \"\",\n  \"gate3_right_size\":      \"\",\n  \"gate3_evidence\":        \"\",\n  \"gate3_swf_bypass\":      false,\n  \"gate3_aum_in_billions\": null,\n  \"gate4_apac_deal_flow\":  \"\",\n  \"gate4_evidence\":        \"\",\n  \"overall_confidence\":    0\n}\n\n=== INPUT DATA ===\nFIRM: {{ $('JSON Cleaner2').first().json.pe_firm_name }}\nCOUNTRY: {{ $('JSON Cleaner2').first().json.company_country }}\nHEADCOUNT (sheet): {{ $('JSON Cleaner2').first().json.headcount }}\nAPAC OFFICES DETECTED: {{ JSON.stringify($('JSON Cleaner2').first().json.apac_offices_detected) }}\nSECTORS DETECTED: {{ JSON.stringify($('JSON Cleaner2').first().json.sectors_detected) }}\nKEYWORDS: {{ ($('JSON Cleaner2').first().json.keywords || '').slice(0,400) }}\nWEBSITE TEXT: {{ ($('JSON Cleaner2').first().json.text_sample_for_ai || '').slice(0,2000) }}\n\nAUM SEARCH — Answer: {{ $if($('AUM Web Search1').isExecuted, $('AUM Web Search1').first().json.answer || 'no answer', '') }}\nAUM SEARCH — Snippets: {{ $if($('AUM Web Search1').isExecuted, ($('AUM Web Search1').first().json.results || []).map(r => r.content).join(' ').slice(0,800), '') }}\n\nGATE 4 DEAL SEARCH: {{ $if($('Gate 4 APAC Deal Search2').isExecuted, JSON.stringify(($('Gate 4 APAC Deal Search2').first().json.results || []).map(r => ({ title: r.title, snippet: r.content })).slice(0,4)), '') }}",
+        "options": {}
+      },
+      "id": "42c00508-b3ad-462d-bdce-7ca7654b784d",
+      "name": "Gate Evaluator AI",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        -4208,
+        9552
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "id": "9ee04e82-1c49-45b6-9c0d-026247b2cd19",
+      "name": "Gate Model (GPT-4o-mini)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        -4208,
+        9792
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "HFxUFCHwnFxZPO8A",
+          "name": "OpenAI account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const aiResp = $('Gate Evaluator AI').first().json;\nlet raw = aiResp.output || aiResp.text || '';\nlet gates = {};\ntry {\n  const m = raw.match(/\\{[\\s\\S]*\\}/);\n  if (!m) throw new Error('no JSON');\n  gates = JSON.parse(m[0]);\n} catch(e) {\n  gates = { gate1_apac_mandate:'unknown', gate1_evidence:'AI parse error',\n    gate2_physical_ops:'unknown', gate2_evidence:'AI parse error',\n    gate3_right_size:'unknown', gate3_evidence:'AI parse error',\n    gate3_swf_bypass:false, gate3_aum_in_billions:null,\n    gate4_apac_deal_flow:'unknown', gate4_evidence:'AI parse error', overall_confidence:0 };\n}\n\nconst isPass = v => (v||'').toLowerCase() === 'pass';\nconst isFail = v => (v||'').toLowerCase() === 'fail';\nconst isUnk  = v => (v||'').toLowerCase() === 'unknown';\n\nconst g1 = gates.gate1_apac_mandate   || 'unknown';\nconst g2 = gates.gate2_physical_ops   || 'unknown';\nconst g3 = gates.gate3_right_size     || 'unknown';\nconst g4 = gates.gate4_apac_deal_flow || 'unknown';\n\n// ── NEW RULE ──────────────────────────────────────────────\n// QUALIFIED   = Gate 1 PASS AND Gate 2 PASS (both mandatory)\n// DISQUALIFIED = Gate 1 FAIL OR Gate 2 FAIL (either fails = out)\n// Gate 3 and Gate 4 = evidence only, do not affect decision\n// ─────────────────────────────────────────────────────────\nlet qualified     = false;\nlet strong_fit    = false;\nlet manual_review = false;\nlet decision      = 'disqualified';\nlet discard_reason = '';\n\nif (isPass(g1) && isPass(g2)) {\n  qualified  = true;\n  strong_fit = true;\n  decision   = 'qualified';\n} else {\n  // At least one of Gate 1 or Gate 2 failed\n  const reasons = [];\n  if (!isPass(g1)) reasons.push('Gate 1 failed — ' + (gates.gate1_evidence || 'no APAC mandate found'));\n  if (!isPass(g2)) reasons.push('Gate 2 failed — ' + (gates.gate2_evidence || 'no physical ops portfolio found'));\n  discard_reason = reasons.join(' | ');\n  decision = 'disqualified';\n}\n\nconst firm = $('JSON Cleaner2').first().json;\n\nreturn [{ json: {\n  pe_firm_name:          firm.pe_firm_name,\n  website_url:           firm.website_url,\n  company_linkedin_url:  firm.company_linkedin_url,\n  company_country:       firm.company_country,\n  industry:              firm.industry,\n  headcount:             firm.headcount,\n  scrape_quality:        firm.scrape_quality,\n  pages_scraped:         JSON.stringify(firm.pages_scraped || []),\n  keywords:              firm.keywords,\n  text_sample_for_ai:    firm.text_sample_for_ai,\n  apac_offices_detected: JSON.stringify(firm.apac_offices_detected || []),\n  sectors_detected:      JSON.stringify(firm.sectors_detected || []),\n  team_page_url:         firm.team_page_url,\n  portfolio_page_url:    firm.portfolio_page_url,\n  centralized_phrases:   JSON.stringify(firm.centralized_phrases || []),\n  network_phrases:       JSON.stringify(firm.network_phrases || []),\n  gate1_apac_mandate:    g1,\n  gate1_evidence:        gates.gate1_evidence || '',\n  gate2_physical_ops:    g2,\n  gate2_evidence:        gates.gate2_evidence || '',\n  gate3_right_size:      g3,\n  gate3_evidence:        gates.gate3_evidence || '',\n  gate3_swf_bypass:      gates.gate3_swf_bypass || false,\n  aum_in_billions:       gates.gate3_aum_in_billions || null,\n  gate4_apac_deal_flow:  g4,\n  gate4_evidence:        gates.gate4_evidence || '',\n  qualified:             qualified,\n  strong_fit:            strong_fit,\n  manual_review:         manual_review,\n  decision:              decision,\n  discard_reason:        discard_reason,\n  phase1_confidence:     gates.overall_confidence || 0,\n  run_date:              new Date().toISOString().split('T')[0],\n  w1_status:             'done'\n}}];"
+      },
+      "id": "f8643c5e-00ff-4a99-a720-df32d6675f72",
+      "name": "Qualify Decision",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3856,
+        9552
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1367090359,
+          "mode": "list",
+          "cachedResultName": "W1_Qualified",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=1367090359"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "pe_firm_name",
+              "displayName": "pe_firm_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "website_url",
+              "displayName": "website_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_linkedin_url",
+              "displayName": "company_linkedin_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_country",
+              "displayName": "company_country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "industry",
+              "displayName": "industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "headcount",
+              "displayName": "headcount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "scrape_quality",
+              "displayName": "scrape_quality",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "pages_scraped",
+              "displayName": "pages_scraped",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "keywords",
+              "displayName": "keywords",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "text_sample_for_ai",
+              "displayName": "text_sample_for_ai",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "apac_offices_detected",
+              "displayName": "apac_offices_detected",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "sectors_detected",
+              "displayName": "sectors_detected",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "team_page_url",
+              "displayName": "team_page_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "portfolio_page_url",
+              "displayName": "portfolio_page_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "centralized_phrases",
+              "displayName": "centralized_phrases",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "network_phrases",
+              "displayName": "network_phrases",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate1_apac_mandate",
+              "displayName": "gate1_apac_mandate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate1_evidence",
+              "displayName": "gate1_evidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate2_physical_ops",
+              "displayName": "gate2_physical_ops",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate2_evidence",
+              "displayName": "gate2_evidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate3_right_size",
+              "displayName": "gate3_right_size",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate3_evidence",
+              "displayName": "gate3_evidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate3_swf_bypass",
+              "displayName": "gate3_swf_bypass",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "aum_in_billions",
+              "displayName": "aum_in_billions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate4_apac_deal_flow",
+              "displayName": "gate4_apac_deal_flow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate4_evidence",
+              "displayName": "gate4_evidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "qualified",
+              "displayName": "qualified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "strong_fit",
+              "displayName": "strong_fit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "manual_review",
+              "displayName": "manual_review",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "decision",
+              "displayName": "decision",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "discard_reason",
+              "displayName": "discard_reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "phase1_confidence",
+              "displayName": "phase1_confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "run_date",
+              "displayName": "run_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "w1_status",
+              "displayName": "w1_status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "d70dc97f-7bc0-4916-bc17-4854b04c8490",
+      "name": "Write → W1 Qualified",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -3168,
+        9712
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I",
+          "mode": "list",
+          "cachedResultName": "apollo-contacts-export ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 795603136,
+          "mode": "list",
+          "cachedResultName": "W1_Disqualified",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/19jiqNmdRmiyi9tXBdHhTF_vEbZ8ERsunLy15gS4iQ-I/edit#gid=795603136"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "pe_firm_name",
+              "displayName": "pe_firm_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "website_url",
+              "displayName": "website_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_linkedin_url",
+              "displayName": "company_linkedin_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "company_country",
+              "displayName": "company_country",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "industry",
+              "displayName": "industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "status",
+              "displayName": "status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "qualified",
+              "displayName": "qualified",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "discard_reason",
+              "displayName": "discard_reason",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate1_apac_mandate",
+              "displayName": "gate1_apac_mandate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate1_evidence",
+              "displayName": "gate1_evidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate2_physical_ops",
+              "displayName": "gate2_physical_ops",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate2_evidence",
+              "displayName": "gate2_evidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate3_right_size",
+              "displayName": "gate3_right_size",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate3_evidence",
+              "displayName": "gate3_evidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate4_apac_deal_flow",
+              "displayName": "gate4_apac_deal_flow",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "gate4_evidence",
+              "displayName": "gate4_evidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "aum_in_billions",
+              "displayName": "aum_in_billions",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "phase1_confidence",
+              "displayName": "phase1_confidence",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "scrape_quality",
+              "displayName": "scrape_quality",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "run_date",
+              "displayName": "run_date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "bf2967eb-e6d0-4718-82a2-895958b4007c",
+      "name": "Write → W1 Disqualified",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        -3168,
+        9968
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JysjYy6I7j3TXUVm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const firmMap = {};\nfor (const item of $input.all()) {\n  const raw = item.json;\n  const name = (raw['Company Name'] || '').trim();\n  if (!name || firmMap[name]) continue;\n  firmMap[name] = {\n    pe_firm_name:         name,\n    website_url:          (raw['Website'] || '').trim(),\n    company_linkedin_url: (raw['Company Linkedin Url'] || '').trim(),\n    headcount:            raw['# Employees'] || null,\n    company_country:      (raw['Company Country'] || '').trim(),\n    company_city:         (raw['Company City'] || '').trim(),\n    keywords:             (raw['Keywords'] || '').toLowerCase(),\n    industry:             (raw['Industry'] || '').toLowerCase()\n  };\n}\nconst out = Object.values(firmMap).map(f => ({ json: f }));\nif (!out.length) throw new Error('No firms found. Check columns: Company Name, Website, Company Linkedin Url, # Employees, Company Country');\nreturn out;"
+      },
+      "id": "4aff8f41-bf53-4de9-8597-d2d2614d44a9",
+      "name": "Dedup + Transform2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -6768,
+        10640
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const excludeInd = ['banking','bank','insurance','mutual fund',\n  'asset management','wealth management','hedge fund','reit',\n  'real estate investment trust','real estate fund'];\nconst excludeKw = ['mutual fund','hedge fund','wealth management',\n  'asset management','reit','insurance carrier'];\n\nreturn $input.all().map(item => {\n  const ind = (item.json.industry || '').toLowerCase();\n  const kw  = (item.json.keywords || '').toLowerCase();\n  let matched = null;\n  for (const ex of excludeInd) { if (ind.includes(ex)) { matched = ex; break; } }\n  if (!matched) for (const ex of excludeKw) { if (kw.includes(ex)) { matched = ex; break; } }\n  return { json: {\n    ...item.json,\n    scope_status:   matched ? 'out_of_scope' : 'in_scope',\n    discard_reason: matched ? 'Out of scope: ' + matched : null\n  }};\n});"
+      },
+      "id": "0b4fed61-6fb0-472b-8598-b5a745da90bc",
+      "name": "Scope Filter2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -7328,
+        9984
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "s1",
+              "leftValue": "={{ $json.scope_status }}",
+              "rightValue": "in_scope",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "ebdfb3ba-fe94-4239-a834-c69f512c3991",
+      "name": "Scope Router2",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -6896,
+        9968
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "1f62f26f-fee1-4587-a43f-173543aa48b4",
+      "name": "Loop Over Firms2",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -6432,
+        9584
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const firm = $input.first().json;\nlet base = firm.website_url || '';\nif (!base) return [{ json: { ...firm, pages_to_crawl: [], base_url: '' } }];\nif (!base.startsWith('http')) base = 'https://' + base;\nbase = base.replace(/\\/$/, '');\nconst suffixes = ['','/team','/our-team','/people','/about','/about-us',\n  '/approach','/value-creation','/portfolio','/investments','/operating-group'];\nreturn [{ json: { ...firm, base_url: base,\n  pages_to_crawl: suffixes.map(s => ({ url: base + s, page_type: s || 'homepage' })) }}];"
+      },
+      "id": "dfb36865-334c-47df-9e67-768c68335c84",
+      "name": "Website Crawler Prep2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -6144,
+        9584
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const firm = $input.first().json;\nconst pages = firm.pages_to_crawl || [];\nif (!pages.length) return [{ json: { ...firm, url: firm.base_url || '', page_type: 'homepage' } }];\nreturn pages.map(p => ({ json: { ...firm, url: p.url, page_type: p.page_type } }));"
+      },
+      "id": "3a2bc339-ee47-492b-a469-850110d9dc99",
+      "name": "Split Pages to Crawl2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5904,
+        9584
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {
+          "redirect": {
+            "redirect": {
+              "maxRedirects": 3
+            }
+          },
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          },
+          "timeout": 10000
+        }
+      },
+      "id": "3e8a2569-6cf0-436d-9833-dce94e40745a",
+      "name": "Fetch Single Page2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -5664,
+        9584
+      ],
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "const httpItems = $input.all();\nconst firmItems = $('Split Pages to Crawl2').all();\nreturn httpItems.map((item, i) => {\n  const firm = firmItems[i]?.json || {};\n  const body = item.json.data || item.json.body || '';\n  return { json: { ...firm, body: typeof body === 'string' ? body : JSON.stringify(body) } };\n});"
+      },
+      "id": "1c2c9eeb-8ff0-4857-ab19-56ea9ad9c3f4",
+      "name": "Carry URL Forward2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5424,
+        9584
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nif (!items.length) return [{ json: { crawl_status: 'failed', pages_fetched: [] } }];\nconst first = items[0].json;\nconst pages = items\n  .map(i => ({ url: i.json.url||'', page_type: i.json.page_type||'unknown', body: i.json.body||'' }))\n  .filter(p => p.body && p.body.length > 50);\nreturn [{ json: { ...first, pages_fetched: pages, crawl_status: pages.length > 0 ? 'success' : 'failed' } }];"
+      },
+      "id": "44094250-6e16-4495-8f92-e79da9c1dfef",
+      "name": "Aggregate Pages2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -5184,
+        9584
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const firm = $input.first().json;\n\nfunction stripHtml(html) {\n  if (!html || typeof html !== 'string') return '';\n  return html\n    .replace(/<script[\\s\\S]*?<\\/script>/gi, '')\n    .replace(/<style[\\s\\S]*?<\\/style>/gi, '')\n    .replace(/<[^>]+>/g, ' ')\n    .replace(/\\s+/g, ' ').trim().slice(0, 8000);\n}\n\nconst centralizedPhrases = ['team of','full-time','in-house operating','dedicated team',\n  'embedded professionals','our operating team','portfolio operations team',\n  'value creation team','operating group','capstone','portfolio group','gps team'];\nconst networkPhrases = ['network of advisors','external advisors','industrial advisors',\n  'consulting partners','part-time affiliates','advisor network','executive network'];\nconst apacLocations = ['singapore','hong kong','mumbai','jakarta','sydney','tokyo',\n  'beijing','shanghai','seoul','kuala lumpur','bangkok','taipei','melbourne',\n  'osaka','new delhi','manila'];\nconst physicalSectors = ['manufacturing','industrials','infrastructure','logistics','energy',\n  'consumer goods','healthcare','real assets','chemicals','automotive','packaging',\n  'electronics','pharma','medical devices','building materials','food','beverage','supply chain'];\n\nconst rawPages = (firm.pages_fetched || []).map(p => ({\n  url: p.url||'', page_type: p.page_type||'unknown', text: stripHtml(p.body||'')\n}));\nif (!rawPages.length && firm.body)\n  rawPages.push({ url: firm.base_url||'', page_type: 'homepage', text: stripHtml(firm.body) });\n\nconst allText = rawPages.map(p => p.text).join(' ').toLowerCase();\nconst teamPage      = rawPages.find(p => ['team','our-team','people'].includes(p.page_type));\nconst portfolioPage = rawPages.find(p => ['portfolio','investments'].includes(p.page_type));\n\nreturn [{ json: {\n  pe_firm_name:          firm.pe_firm_name,\n  website_url:           firm.website_url,\n  base_url:              firm.base_url || firm.website_url,\n  company_linkedin_url:  firm.company_linkedin_url,\n  headcount:             firm.headcount,\n  company_country:       firm.company_country,\n  company_city:          firm.company_city,\n  keywords:              firm.keywords,\n  industry:              firm.industry,\n  pages_scraped:         rawPages.map(p => p.url).filter(Boolean),\n  scrape_quality:        allText.length < 500 ? 'failed' : allText.length < 2000 ? 'partial' : 'good',\n  centralized_phrases:   centralizedPhrases.filter(p => allText.includes(p)),\n  network_phrases:       networkPhrases.filter(p => allText.includes(p)),\napac_offices_detected: (() => {\n  const fromText = apacLocations.filter(l => allText.includes(l));\n  const apacCountries = ['singapore','hong kong','india','indonesia','australia',\n    'japan','china','south korea','malaysia','thailand','taiwan','vietnam',\n    'philippines','myanmar','cambodia','bangladesh','sri lanka','pakistan','nepal','brunei'];\n  const countryLower = (firm.company_country || '').toLowerCase();\n  const fromCountry = apacCountries.filter(c => countryLower.includes(c));\n  return [...new Set([...fromText, ...fromCountry])];\n})(),\n  sectors_detected:      physicalSectors.filter(s => allText.includes(s)),\n  team_page_url:         teamPage ? teamPage.url : null,\n  portfolio_page_url:    portfolioPage ? portfolioPage.url : null,\n  text_sample_for_ai:    allText.slice(0, 6000)\n}}];"
+      },
+      "id": "279cf42d-025a-4709-b56e-71e09a926a95",
+      "name": "JSON Cleaner2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -4944,
+        9584
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.pe_firm_name }} private equity AUM assets under management fund size\",\n  \"search_depth\": \"basic\",\n  \"include_answer\": true,\n  \"max_results\": 5\n}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "ecd7b71e-1efb-4760-ab4f-7fb027f2cb57",
+      "name": "AUM Web Search1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -4656,
+        9408
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.tavily.com/search",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"api_key\": \"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\",\n  \"query\": \"{{ $json.pe_firm_name }} portfolio deal acquisition Singapore Asia 2024 2025 2026\",\n  \"search_depth\": \"basic\",\n  \"max_results\": 5\n}",
+        "options": {
+          "timeout": 15000
+        }
+      },
+      "id": "c6180bd2-991b-4d29-8dfe-a6f4716288c5",
+      "name": "Gate 4 APAC Deal Search2",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -4656,
+        9696
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          },
+          "conditions": [
+            {
+              "id": "qc",
+              "leftValue": "={{ $json.qualified }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "2397878f-e56d-4eed-8de5-377544dfa4a2",
+      "name": "Qualify Router1",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        -3552,
+        9552
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const d = $input.first().json;\nreturn [{ json: {\n  pe_firm_name:         d.pe_firm_name,\n  website_url:          d.website_url,\n  company_linkedin_url: d.company_linkedin_url,\n  company_country:      d.company_country,\n  industry:             d.industry,\n  status:               'Disqualified',\n  qualified:            false,\n  discard_reason:       d.discard_reason || (d.scope_status === 'out_of_scope' ? 'Out of scope: ' + d.industry : 'Failed gates'),\n  gate1_apac_mandate:   d.gate1_apac_mandate   || null,\n  gate1_evidence:       d.gate1_evidence        || null,\n  gate2_physical_ops:   d.gate2_physical_ops    || null,\n  gate2_evidence:       d.gate2_evidence        || null,\n  gate3_right_size:     d.gate3_right_size      || null,\n  gate3_evidence:       d.gate3_evidence        || null,\n  gate4_apac_deal_flow: d.gate4_apac_deal_flow  || null,\n  gate4_evidence:       d.gate4_evidence        || null,\n  aum_in_billions:      d.aum_in_billions       || null,\n  phase1_confidence:    d.phase1_confidence     || null,\n  scrape_quality:       d.scrape_quality        || null,\n  run_date:             new Date().toISOString().split('T')[0]\n}}];"
+      },
+      "id": "c78be915-2f7f-41fa-a523-720be17ce43a",
+      "name": "Disqualified Row Builder2",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -3472,
+        9968
+      ]
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -7088,
+        10400
+      ],
+      "id": "74dfc55d-6caf-4553-aac3-2f63939909b8",
+      "name": "When clicking ‘Execute workflow’"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Read Raw Firms Sheet": {
+      "main": [
+        [
+          {
+            "node": "Dedup + Transform2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Search Results": {
+      "main": [
+        [
+          {
+            "node": "Gate Evaluator AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gate Model (GPT-4o-mini)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Gate Evaluator AI",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gate Evaluator AI": {
+      "main": [
+        [
+          {
+            "node": "Qualify Decision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qualify Decision": {
+      "main": [
+        [
+          {
+            "node": "Qualify Router1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write → W1 Qualified": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Firms2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write → W1 Disqualified": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Firms2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dedup + Transform2": {
+      "main": [
+        [
+          {
+            "node": "Scope Filter2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scope Filter2": {
+      "main": [
+        [
+          {
+            "node": "Scope Router2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scope Router2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Firms2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Disqualified Row Builder2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Firms2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Website Crawler Prep2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Website Crawler Prep2": {
+      "main": [
+        [
+          {
+            "node": "Split Pages to Crawl2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Pages to Crawl2": {
+      "main": [
+        [
+          {
+            "node": "Fetch Single Page2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Single Page2": {
+      "main": [
+        [
+          {
+            "node": "Carry URL Forward2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Carry URL Forward2": {
+      "main": [
+        [
+          {
+            "node": "Aggregate Pages2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate Pages2": {
+      "main": [
+        [
+          {
+            "node": "JSON Cleaner2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON Cleaner2": {
+      "main": [
+        [
+          {
+            "node": "AUM Web Search1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Gate 4 APAC Deal Search2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AUM Web Search1": {
+      "main": [
+        [
+          {
+            "node": "Merge Search Results",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gate 4 APAC Deal Search2": {
+      "main": [
+        [
+          {
+            "node": "Merge Search Results",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Qualify Router1": {
+      "main": [
+        [
+          {
+            "node": "Write → W1 Qualified",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Disqualified Row Builder2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Disqualified Row Builder2": {
+      "main": [
+        [
+          {
+            "node": "Write → W1 Disqualified",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Read Raw Firms Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "27d4ac76-d87f-4808-aa18-a63fcdcba9d1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "ca229486879688ee6015d8ac015584cfbf35615398e73c62051ae01ed19542c5"
+  },
+  "id": "GbD7ioCq1NdRdAYy",
+  "tags": []
+}
